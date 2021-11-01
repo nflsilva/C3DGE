@@ -10,6 +10,7 @@
 Core::Core() : isRunning(false) {
   window = Window::Create(WIDTH, HEIGHT, "3DGE Example");
   keyboard = window->GetKeyboard();
+  mouse = window->GetMouse();
 }
 Core::~Core(){}
 
@@ -45,7 +46,7 @@ void Core::Run(){
     lastTime = nowTime;
 
     while (deltaTime >= 1.0){
-        game->OnInput(keyboard);
+        game->OnInput(keyboard, mouse);
         Update();
         updates++;
         deltaTime--;
@@ -64,12 +65,12 @@ void Core::Run(){
     }
 	}
 
-
 }
 
 void Core::Update(){
   game->OnUpdate();
   keyboard->Update();
+  mouse->Update();
   window->Update();
 }
 

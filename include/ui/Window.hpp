@@ -4,6 +4,7 @@
 #include <string>
 #include <GLFW/glfw3.h>
 #include "ui/Keyboard.hpp"
+#include "ui/Mouse.hpp"
 
 class Window {
 
@@ -15,6 +16,7 @@ class Window {
     std::string title;
     GLFWwindow* window;
     Keyboard* keyboard;
+    Mouse* mouse;
 
     Window(int width, int height, std::string title);
     ~Window();
@@ -29,6 +31,7 @@ class Window {
     void operator=(const Window &) = delete;
 
     Keyboard* GetKeyboard();
+    Mouse* GetMouse();
 
     void Close();
     bool IsRunning();

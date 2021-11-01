@@ -10,6 +10,7 @@ class Core {
     iGameLogic* game;
     Window* window;
     Keyboard* keyboard;
+    Mouse* mouse;
 
     bool isRunning;
 

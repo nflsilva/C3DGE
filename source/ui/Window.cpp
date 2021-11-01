@@ -7,6 +7,7 @@ Window* Window::Create(int width, int height, std::string title){
   if(instance == NULL){
     instance = new Window(width, height, title);
     instance->keyboard = Keyboard::Create(instance->window);
+    instance->mouse = Mouse::Create(instance->window);
   }
   return instance;
 }
@@ -45,11 +46,17 @@ Keyboard* Window::GetKeyboard(){
   return keyboard;
 }
 
+Mouse* Window::GetMouse(){
+  return mouse;
+}
+
 bool Window::IsRunning(){
   return !glfwWindowShouldClose(window);
 }
 
 void Window::Update(){
+  keyboard->Update();
+  mouse->Update();
   glfwPollEvents();
 }
 

@@ -1,7 +1,6 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#include "ui/Keyboard.hpp"
 #include "iGameLogic.hpp"
 
 class Game : public iGameLogic {
@@ -11,7 +10,7 @@ class Game : public iGameLogic {
     ~Game();
 
     void OnStart();
-    void OnInput(Keyboard* keyboard);
+    void OnInput(Keyboard* keyboard, Mouse* mouse);
     void OnUpdate();
     void OnRender();
     void OnDestroy();
