@@ -20,8 +20,8 @@ void Game::OnInput(Keyboard* keyboard, Mouse* mouse){
     Log::D("Up W");
   }
 
-  if(mouse->GetButton(0)){
-    Log::D("Press M0");
+  if(mouse->GetButton(1)){
+    Log::D("Press M1");
     Log::D("Mouse " + mouse->GetPosition().ToString());
   }
   else if(mouse->GetButtonDown(0)){
