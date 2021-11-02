@@ -3,7 +3,9 @@
 
 #include "ui/Window.hpp"
 #include "Game.hpp"
+
 #include "tools/Vec3D.hpp"
+#include "tools/Quaternion.hpp"
 
 class Core {
 

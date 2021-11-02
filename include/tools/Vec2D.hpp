@@ -4,37 +4,34 @@
 #include <string>
 #include <math.h>
 
-template <class T> class Vec2D
-{
+class Vec2D {
+  
   public:
-    T x, y;
+    float x, y;
 
     Vec2D(){}
-    Vec2D(T x, T y) : x(x), y(y){}
+    Vec2D(float x, float y) : x(x), y(y){}
 
-    Vec2D operator + (T v){ return Vec2D<T>(x + v, y + v); }
-    Vec2D operator - (T v){ return Vec2D<T>(x - v, y - v); }
-    Vec2D operator * (T v){ return Vec2D<T>(x * v, y * v); }
-    Vec2D operator / (T v){ return Vec2D<T>(x / v, y / v); }
+    Vec2D operator + (float v){ return Vec2D(x + v, y + v); }
+    Vec2D operator - (float v){ return Vec2D(x - v, y - v); }
+    Vec2D operator * (float v){ return Vec2D(x * v, y * v); }
+    Vec2D operator / (float v){ return Vec2D(x / v, y / v); }
 
-    Vec2D operator + (Vec2D v){ return Vec2D<T>(x + v.x, y + v.y); }
-    Vec2D operator - (Vec2D v){ return Vec2D<T>(x - v.x, y - v.y); }
-    Vec2D operator * (Vec2D v){ return Vec2D<T>(x * v.x, y * v.y); }
-    Vec2D operator / (Vec2D v){ return Vec2D<T>(x / v.x, y / v.y); }
+    Vec2D operator + (Vec2D v){ return Vec2D(x + v.x, y + v.y); }
+    Vec2D operator - (Vec2D v){ return Vec2D(x - v.x, y - v.y); }
+    Vec2D operator * (Vec2D v){ return Vec2D(x * v.x, y * v.y); }
+    Vec2D operator / (Vec2D v){ return Vec2D(x / v.x, y / v.y); }
     
     bool operator == (Vec2D v){ return x == v.x && y == v.y; }
     bool operator != (Vec2D v){ return x != v.x || y != v.y; }
 
     std::string ToString(){ return "[" + std::to_string(x) + ", " + std::to_string(y) + "]"; };
 
-    T Length() { return (T)sqrt(x * x + y * y); };
-    T Dot(Vec2D v) { return x * v.x + y * v.y; }
-    void Normalize(){ T l = Length(); x /= l; y/= l; };
-    Vec2D Rotate(float degrees) { double rad = degrees * M_PI / 180; double c = cos(rad); double s = sin(rad); return Vec2D<T>((T)(x*c-y*s), (T)(x*s+y*c));};
+    float Length() { return (float)sqrt(x * x + y * y); };
+    float Dot(Vec2D v) { return x * v.x + y * v.y; }
+    void Normalize(){ float l = Length(); x /= l; y/= l; };
+    Vec2D Rotate(float degrees) { double rad = degrees * M_PI / 180; double c = cos(rad); double s = sin(rad); return Vec2D((float)(x*c-y*s), (float)(x*s+y*c));};
 
 };
-
-typedef Vec2D<int> Vec2Di_t;
-typedef Vec2D<double> Vec2Dd_t;
 
 #endif

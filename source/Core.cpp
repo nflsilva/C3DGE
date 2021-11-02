@@ -7,6 +7,8 @@
 #include <ctime>
 #include <thread>
 
+#include "tools/Mat4D.hpp"
+
 Core::Core() : isRunning(false) {
   window = Window::Create(WIDTH, HEIGHT, "3DGE Example");
   keyboard = window->GetKeyboard();

@@ -27,7 +27,7 @@ bool Mouse::GetButtonUp(int key){
   return upButtons.find(key) != upButtons.end();
 }
 
-Vec2Di_t Mouse::GetPosition(){
+Vec2D Mouse::GetPosition(){
   return position;
 }
 

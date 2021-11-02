@@ -10,7 +10,7 @@ class Mouse {
 
   private:
     static Mouse* instance;
-    Vec2Di_t position;
+    Vec2D position;
     std::unordered_set<int> downButtons;
     std::unordered_set<int> upButtons;
 
@@ -29,7 +29,7 @@ class Mouse {
     bool GetButton(int button);
     bool GetButtonDown(int button);
     bool GetButtonUp(int button);
-    Vec2Di_t GetPosition();
+    Vec2D GetPosition();
 
     void Update();
 
