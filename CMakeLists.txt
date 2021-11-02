@@ -2,12 +2,31 @@ cmake_minimum_required(VERSION 3.20.1)
 
 project(3DGE)
 
+add_definitions(
+	-c
+	-Wall
+)
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-include_directories(include)
 file(GLOB_RECURSE SOURCES "source/*.cpp")
 add_executable(${PROJECT_NAME} ${SOURCES})
 
+SET(3DGameEngine_CMAKE_DIR "${3DGameEngine_CMAKE_DIR}/cmake")
+
 find_package(glfw3 3.3 REQUIRED)
-target_link_libraries(3DGE glfw)
+find_package(GLEW REQUIRED)
+find_package(OpenGL REQUIRED)
+
+include_directories(
+  include
+  ${OPENGL_INCLUDE_DIRS} 
+  ${GLEW_INCLUDE_DIRS}
+)
+
+target_link_libraries(3DGE 
+  glfw 
+  ${OPENGL_LIBRARIES}
+  ${GLEW_LIBRARIES}
+)

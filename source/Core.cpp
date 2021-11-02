@@ -1,18 +1,19 @@
+#include "Core.hpp"
 #include "tools/Log.hpp"
 #include "tools/Time.hpp"
-#include "Core.hpp"
 
 #include <stdio.h>
 #include <chrono>
 #include <ctime>
 #include <thread>
 
-#include "tools/Mat4D.hpp"
-
 Core::Core() : isRunning(false) {
   window = Window::Create(WIDTH, HEIGHT, "3DGE Example");
   keyboard = window->GetKeyboard();
   mouse = window->GetMouse();
+
+  game = new Game();
+  graphicsApi = new OpenGLWrapper(WIDTH, HEIGHT); 
 }
 Core::~Core(){}
 
@@ -21,6 +22,7 @@ void Core::Start(){
     return;
   }
   isRunning = true;
+  graphicsApi->Init();
   Run();
 }
 
@@ -38,8 +40,6 @@ void Core::Run(){
   double lastTime = Time::GetTime(), timer = lastTime;
   double deltaTime = 0, nowTime = 0;
   int frames = 0, updates = 0;
-
-  game = new Game();
 
 	while(isRunning){
 
@@ -78,6 +78,8 @@ void Core::Update(){
 
 void Core::Render(){
   game->OnRender();
+  window->Render();
+  graphicsApi->ClearScreen();
 }
 
 void Core::Destroy(){

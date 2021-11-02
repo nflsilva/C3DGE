@@ -34,7 +34,7 @@ Window::Window(int width, int height, std::string title) : width(width), height(
   glfwSetWindowCloseCallback(window, CloseCallback);
 
   glfwMakeContextCurrent(window);
-
+  glfwSwapInterval(1);
 }
 
 Window::~Window(){
@@ -58,6 +58,10 @@ void Window::Update(){
   keyboard->Update();
   mouse->Update();
   glfwPollEvents();
+}
+
+void Window::Render(){
+  glfwSwapBuffers(window);
 }
 
 void Window::ErrorCallback(int error, const char* description)

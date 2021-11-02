@@ -36,6 +36,7 @@ class Window {
     void Close();
     bool IsRunning();
     void Update();
+    void Render();
 
 };
 

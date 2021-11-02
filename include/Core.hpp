@@ -1,15 +1,14 @@
 #ifndef CORE_HPP
 #define CORE_HPP
 
+#include "render/OpenGLWrapper.hpp"
 #include "ui/Window.hpp"
 #include "Game.hpp"
-
-#include "tools/Vec3D.hpp"
-#include "tools/Quaternion.hpp"
 
 class Core {
 
   private:
+    iGraphicsAPI* graphicsApi;
     iGameLogic* game;
     Window* window;
     Keyboard* keyboard;
