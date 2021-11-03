@@ -8,12 +8,12 @@
 #include <thread>
 
 Core::Core() : isRunning(false) {
-  window = Window::Create(WIDTH, HEIGHT, "3DGE Example");
+  window = Window::Create(WIDTH, HEIGHT, "3DGE");
   keyboard = window->GetKeyboard();
   mouse = window->GetMouse();
 
   game = new Game();
-  graphicsApi = new OpenGLWrapper(WIDTH, HEIGHT); 
+  graphicsApi = new RenderEngine(WIDTH, HEIGHT); 
 }
 Core::~Core(){}
 
@@ -23,6 +23,7 @@ void Core::Start(){
   }
   isRunning = true;
   graphicsApi->Init();
+  game->OnStart();
   Run();
 }
 
@@ -79,7 +80,6 @@ void Core::Update(){
 void Core::Render(){
   game->OnRender();
   window->Render();
-  graphicsApi->ClearScreen();
 }
 
 void Core::Destroy(){

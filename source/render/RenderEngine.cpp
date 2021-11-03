@@ -1,9 +1,9 @@
-#include "render/OpenGLWrapper.hpp"
+#include "render/RenderEngine.hpp"
 #include "tools/Log.hpp"
 
-OpenGLWrapper::OpenGLWrapper(int width, int height) : width(width), height(height){}
+RenderEngine::RenderEngine(int width, int height) : width(width), height(height){}
 
-void OpenGLWrapper::Init(){
+void RenderEngine::Init(){
 
   GLenum err = glewInit();
   if (GLEW_OK != err)
@@ -17,9 +17,10 @@ void OpenGLWrapper::Init(){
   glViewport(0, 0, width, height);
 
   glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
 }
 
-void OpenGLWrapper::ClearScreen() {
+void RenderEngine::ClearScreen() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glClearColor(1.0f, 0.0f, 1.0f, 0.0f);
 }
