@@ -1,11 +1,14 @@
 
 #include "tools/Log.hpp"
-#include "Core.hpp"
+#include "core/CoreEngine.hpp"
+#include "Game.hpp"
 
 int main(int argc, char **argv){
 
-	Core* c = new Core();
-	c->Start();
+	CoreEngine e;
+	Game g(&e);
+	e.SetDelegate(&g);
+	e.Start();
 
 	Log::D("Done!");
 	return 0;

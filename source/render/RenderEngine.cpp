@@ -20,6 +20,11 @@ void RenderEngine::Init(){
 
 }
 
+void RenderEngine::Render(std::list<RenderComponent*> components){
+  for(auto o : components)
+    o->geometry->Draw();
+}
+
 void RenderEngine::ClearScreen() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glClearColor(1.0f, 0.0f, 1.0f, 0.0f);

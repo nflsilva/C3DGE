@@ -1,16 +1,27 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#include "iGameLogic.hpp"
+#include "core/CoreEngine.hpp"
+#include "core/CoreEngineDelegate.hpp"
+#include "core/GameObject.hpp"
 
-class Game : public iGameLogic {
+class Game : public CoreEngineDelegate {
+
+  private:
+    CoreEngine* engine;
+    GameObject* triangle;
+    Vertex vertexes[3] = {
+      Vertex(-1, -1, 0),
+      Vertex(0, 1, 0),
+      Vertex(1, -1, 0),
+    };
 
   public:
-    Game();
+    Game(CoreEngine* engine);
     ~Game();
 
     void OnStart();
-    void OnInput(Keyboard* keyboard, Mouse* mouse);
+    void OnInput();
     void OnUpdate();
     void OnRender();
     void OnDestroy();
