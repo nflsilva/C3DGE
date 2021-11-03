@@ -9,6 +9,8 @@ class RenderEngine {
     int width;
     int height;
 
+    void CreateShaders();
+
   public:
     RenderEngine(int width, int height);
     void Init();
