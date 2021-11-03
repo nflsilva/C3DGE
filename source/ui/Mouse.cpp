@@ -27,14 +27,18 @@ bool Mouse::GetButtonUp(int key){
   return upButtons.find(key) != upButtons.end();
 }
 
-Vec2D Mouse::GetPosition(){
-  return position;
+int Mouse::GetX(){
+  return x;
+}
+
+int Mouse::GetY(){
+  return y;
 }
 
 void Mouse::MousePositionCallback(GLFWwindow* window, double xpos, double ypos)
 {
-  Mouse::instance->position.x = (int)xpos;
-  Mouse::instance->position.y = (int)ypos;
+  Mouse::instance->x = (int)xpos;
+  Mouse::instance->y = (int)ypos;
 }
 
 void Mouse::MouseButtonCallback(GLFWwindow* window, int button, int action, int mods){

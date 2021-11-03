@@ -3,14 +3,13 @@
 
 #include <GLFW/glfw3.h>
 #include <unordered_set>
-#include "ui/Keyboard.hpp"
-#include "tools/Vec2D.hpp"
 
 class Mouse {
 
   private:
     static Mouse* instance;
-    Vec2D position;
+    int x;
+    int y;
     std::unordered_set<int> downButtons;
     std::unordered_set<int> upButtons;
 
@@ -29,7 +28,8 @@ class Mouse {
     bool GetButton(int button);
     bool GetButtonDown(int button);
     bool GetButtonUp(int button);
-    Vec2D GetPosition();
+    int GetX();
+    int GetY();
 
     void Update();
 

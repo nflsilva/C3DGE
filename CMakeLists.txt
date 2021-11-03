@@ -18,15 +18,18 @@ SET(3DGameEngine_CMAKE_DIR "${3DGameEngine_CMAKE_DIR}/cmake")
 find_package(glfw3 3.3 REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(OpenGL REQUIRED)
+find_package(glm REQUIRED)
 
 include_directories(
   include
   ${OPENGL_INCLUDE_DIRS} 
   ${GLEW_INCLUDE_DIRS}
+  ${GLM_INCLUDE_DIRS}
 )
 
 target_link_libraries(3DGE 
   glfw 
   ${OPENGL_LIBRARIES}
   ${GLEW_LIBRARIES}
+  ${GLM_LIBRARIES}
 )

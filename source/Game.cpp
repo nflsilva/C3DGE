@@ -1,6 +1,8 @@
 #include "Game.hpp"
 #include "tools/Log.hpp"
 
+#include <glm/ext/vector_float3.hpp> 
+
 Game::Game(){}
 Game::~Game(){};
 
@@ -22,7 +24,7 @@ void Game::OnInput(Keyboard* keyboard, Mouse* mouse){
 
   if(mouse->GetButton(1)){
     Log::D("Press M1");
-    Log::D("Mouse " + mouse->GetPosition().ToString());
+    Log::D("Mouse " + std::to_string(mouse->GetX()));
   }
   else if(mouse->GetButtonDown(0)){
     Log::D("Down M0");
@@ -34,6 +36,7 @@ void Game::OnInput(Keyboard* keyboard, Mouse* mouse){
 }
 
 void Game::OnUpdate(){
+
 
 }
 
