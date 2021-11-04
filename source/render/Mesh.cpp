@@ -13,6 +13,11 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<int> indices){
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(int), indices.data(), GL_STATIC_DRAW);
 }
 
+Mesh::~Mesh(){
+  GLuint buffers[] = { vbo, ibo};
+  glDeleteBuffers(2, buffers);
+}
+
 void Mesh::Draw(){
   
   glEnableVertexAttribArray(0);

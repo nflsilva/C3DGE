@@ -10,20 +10,9 @@ class Game : public CoreEngineDelegate {
   private:
     CoreEngine* engine;
     GameObject* triangle;
-    std::vector<Vertex> vertices = {
-      Vertex(-1, -1, 0),
-      Vertex( 0,  1, 0),
-      Vertex( 1, -1, 0),
-      Vertex( 0, -1, 1),
-      Vertex( 0, -1, -1)
-    };
-    std::vector<int> indices = { 
-      0, 1, 3,
-      3, 1, 2,
-      2, 1, 0,
-      0, 2, 3,
-      0, 2, 4,
-    };
+    float f = 0;
+    RenderComponent* trComponent;
+
 
   public:
     Game(CoreEngine* engine);

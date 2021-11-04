@@ -11,20 +11,17 @@
 Game::Game(CoreEngine* engine) : engine(engine) {}
 Game::~Game(){};
 
-float f = 0;
-
 void Game::OnStart(){
 
   Resources::MeshData md = Resources::LoadMeshData("teddy.obj");
 
-  RenderComponent * trComponent = new RenderComponent();
+  trComponent = new RenderComponent();
   trComponent->CreateGeometry(md.vertices, md.indices);
 
   triangle = new GameObject();
   triangle->renderComponents.push_front(trComponent);
 
   engine->AddGameObject(triangle);
-
 
 }
 
@@ -47,5 +44,5 @@ void Game::OnRender(){
 }
 
 void Game::OnDestroy(){
-
+  delete(triangle);
 }

@@ -11,6 +11,7 @@ class RenderComponent {
   
   public:
     RenderComponent();
+    ~RenderComponent();
     void CreateGeometry(std::vector<Vertex> vertices,std::vector<int> indices);
 };
 

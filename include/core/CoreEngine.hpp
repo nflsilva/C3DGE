@@ -16,7 +16,6 @@ class CoreEngine {
     UIEngine* uiEngine;
     RenderEngine* renderEngine;
     CoreEngineDelegate* delegate;
-
     std::list<GameObject*> gameObjects;
 
     bool isRunning;
@@ -24,18 +23,6 @@ class CoreEngine {
     void Run();
     void Update();
     void Render();
-    void Destroy();
-
-  protected:
-    class NullCoreEngineDelegate : public CoreEngineDelegate {
-      public:
-        NullCoreEngineDelegate(){}
-        void OnStart(){}
-        void OnInput(){}
-        void OnUpdate(){}
-        void OnRender(){}
-        void OnDestroy(){}
-    };
 
   public:
     CoreEngine();

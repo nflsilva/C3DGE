@@ -9,6 +9,9 @@ class GameObject {
 
   public:
     GameObject(){};
+    ~GameObject(){
+      for(auto c : renderComponents){ delete(c);}
+    }
 
 };
 

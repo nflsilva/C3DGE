@@ -69,36 +69,37 @@ class Resources {
               double v2 = std::stod(lineTokens[3]); 
               md.vertices.push_back(Vertex(v0, v1, v2));;
           
+              /*
               if (lineTokens.size()==7)
               {
                   double c1 = std::stod(lineTokens[4]);
                   double c2 = std::stod(lineTokens[5]);
                   double c3 = std::stod(lineTokens[6]);
-                  //vert_color.push_back(double_line_color);
-              }
+                  vert_color.push_back(double_line_color);
+              }*/
           }
           else if (lineTokens[0]=="vt")
           {
-              double vt0 = std::stod(lineTokens[1]);
-              double vt1 = std::stod(lineTokens[2]);
+              //double vt0 = std::stod(lineTokens[1]);
+              //double vt1 = std::stod(lineTokens[2]);
               ///tex_coords.push_back(double_line);
           }
           else if (lineTokens[0]=="f")
           {
               size_t idx1 = lineTokens[1].find("/");
               unsigned int faceVertex0 = std::stod(lineTokens[1].substr(0, idx1)); 
-              size_t idx2 = lineTokens[1].find("/", idx1 + 1);
-              unsigned int faceTexture0 = std::stod(lineTokens[1].substr(idx1 + 1, idx2));
+              //size_t idx2 = lineTokens[1].find("/", idx1 + 1);
+              //unsigned int faceTexture0 = std::stod(lineTokens[1].substr(idx1 + 1, idx2));
 
               size_t idx3 = lineTokens[2].find("/");
               unsigned int faceVertex1 = std::stod(lineTokens[2].substr(0, idx3)); 
-              size_t idx4 = lineTokens[2].find("/", idx3 + 1);
-              unsigned int v_idx_ftc_2 = std::stod(lineTokens[2].substr(idx3 + 1, idx4));
+              //size_t idx4 = lineTokens[2].find("/", idx3 + 1);
+              //unsigned int v_idx_ftc_2 = std::stod(lineTokens[2].substr(idx3 + 1, idx4));
 
               size_t idx5 = lineTokens[3].find("/");
               unsigned int faceVertex2 = std::stod(lineTokens[3].substr(0, idx5)); 
-              size_t idx6 = lineTokens[3].find("/", idx5 + 1);
-              unsigned int v_idx_ftc_3 = std::stod(lineTokens[3].substr(idx5 + 1, idx6));
+              //size_t idx6 = lineTokens[3].find("/", idx5 + 1);
+              //unsigned int v_idx_ftc_3 = std::stod(lineTokens[3].substr(idx5 + 1, idx6));
 
               md.indices.push_back(faceVertex0 - 1);
               md.indices.push_back(faceVertex1 - 1);

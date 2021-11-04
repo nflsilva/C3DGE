@@ -5,6 +5,7 @@
 Mouse* Mouse::instance = NULL;
 
 Mouse::Mouse(GLFWwindow* window){}
+Mouse::~Mouse(){}
 
 Mouse* Mouse::Create(GLFWwindow* window){
   if(instance == NULL){

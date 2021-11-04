@@ -5,6 +5,7 @@
 Keyboard* Keyboard::instance = NULL;
 
 Keyboard::Keyboard(GLFWwindow* window){}
+Keyboard::~Keyboard(){};
 
 Keyboard* Keyboard::Create(GLFWwindow* window){
   if(instance == NULL){

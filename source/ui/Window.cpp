@@ -1,21 +1,6 @@
 #include "tools/Log.hpp"
 #include "ui/Window.hpp"
 
-Window* Window::instance = NULL;
-
-Window* Window::Create(int width, int height, std::string title){
-  if(instance == NULL){
-    instance = new Window(width, height, title);
-    instance->keyboard = Keyboard::Create(instance->window);
-    instance->mouse = Mouse::Create(instance->window);
-  }
-  return instance;
-}
-
-void Window::Close(){
-  delete(instance);
-}
-
 Window::Window(int width, int height, std::string title) : width(width), height(height), title(title) {
 
   if (!glfwInit())
@@ -23,12 +8,16 @@ Window::Window(int width, int height, std::string title) : width(width), height(
     Log::E("Failed to init GLFW.");
     exit(1);
   }
+  int vMajor, vMinor, vRevision;
+  glfwGetVersion (&vMajor, &vMinor, &vRevision);
+  Log::I("GLFW version " + std::to_string(vMajor) + "." + std::to_string(vMinor) + "."+ std::to_string(vRevision));
+
   glfwSetErrorCallback(ErrorCallback);
 
   window = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
   if (!window)
   {
-    Log::E("Failed to create window.");
+    Log::E("Failed to create GLFW window.");
     exit(1);
   }
   glfwSetWindowCloseCallback(window, CloseCallback);
@@ -38,16 +27,9 @@ Window::Window(int width, int height, std::string title) : width(width), height(
 }
 
 Window::~Window(){
-  if(window){ glfwDestroyWindow(window); }
+  if(window) 
+    glfwDestroyWindow(window);
   glfwTerminate();
-}
-
-Keyboard* Window::GetKeyboard(){
-  return keyboard;
-}
-
-Mouse* Window::GetMouse(){
-  return mouse;
 }
 
 bool Window::IsRunning(){
@@ -55,8 +37,6 @@ bool Window::IsRunning(){
 }
 
 void Window::Update(){
-  keyboard->Update();
-  mouse->Update();
   glfwPollEvents();
 }
 

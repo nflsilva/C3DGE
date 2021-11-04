@@ -14,13 +14,13 @@ class Mouse {
     std::unordered_set<int> upButtons;
 
     Mouse(GLFWwindow* window);
-    ~Mouse();
     
     static void MousePositionCallback(GLFWwindow* window, double xpos, double ypos);
     static void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
 
   public:
     static Mouse* Create(GLFWwindow* window);
+    ~Mouse();
 
     Mouse(Mouse &other) = delete;
     void operator=(const Mouse &) = delete;

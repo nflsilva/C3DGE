@@ -14,12 +14,12 @@ class Keyboard {
     std::unordered_set<int> upKeys;
 
     Keyboard(GLFWwindow* window);
-    ~Keyboard();
     
     static void KeyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
   public:
     static Keyboard* Create(GLFWwindow* window);
+    ~Keyboard();
 
     Keyboard(Keyboard &other) = delete;
     void operator=(const Keyboard &) = delete;

@@ -16,11 +16,8 @@ class UIEngine {
     ~UIEngine();
 
     bool IsRunning();
-
     void Update();
     void Render();
-    void Close();
-
 };
 
 #endif

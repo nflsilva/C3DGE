@@ -13,6 +13,7 @@ class Mesh {
 
   public:
     Mesh(std::vector<Vertex> vertices, std::vector<int> indices);
+    ~Mesh();
     void Draw();
 };
 

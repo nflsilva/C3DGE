@@ -2,12 +2,14 @@
 
 
 UIEngine::UIEngine(int windowWidth, int windowHeight){
-  window = Window::Create(windowWidth, windowHeight, "3DGE");
-  keyboard = window->GetKeyboard();
-  mouse = window->GetMouse();
+  window = new Window(windowWidth, windowHeight, "3DGE");
+  //keyboard = window->GetKeyboard();
+  //mouse = window->GetMouse();
 }
 UIEngine::~UIEngine(){
-
+  delete(window);
+  //delete(keyboard);
+  //delete(mouse);
 }
 
 bool UIEngine::IsRunning(){
@@ -15,15 +17,11 @@ bool UIEngine::IsRunning(){
 }
 
 void UIEngine::Update(){
-  keyboard->Update();
-  mouse->Update();
+  //keyboard->Update();
+  //mouse->Update();
   window->Update();
 }
 
 void UIEngine::Render(){
   window->Render();
-}
-
-void UIEngine::Close(){
-  window->Close();
 }

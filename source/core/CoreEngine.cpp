@@ -7,12 +7,15 @@
 #include <ctime>
 #include <thread>
 
-CoreEngine::CoreEngine() : isRunning(false) {
+CoreEngine::CoreEngine() : delegate(NULL), isRunning(false) {
   uiEngine = new UIEngine(WIDTH, HEIGHT);
   renderEngine = new RenderEngine(WIDTH, HEIGHT); 
-  delegate = new NullCoreEngineDelegate();
 }
-CoreEngine::~CoreEngine(){}
+CoreEngine::~CoreEngine(){
+  if(delegate) delegate->OnDestroy();
+  delete(renderEngine);
+  delete(uiEngine);
+}
 
 void CoreEngine::Start(){
   if(isRunning){
@@ -20,7 +23,7 @@ void CoreEngine::Start(){
   }
   isRunning = true;
   renderEngine->Init();
-  delegate->OnStart();
+  if(delegate) delegate->OnStart();
   Run();
 }
 
@@ -46,7 +49,8 @@ void CoreEngine::Run(){
     lastTime = nowTime;
 
     while (deltaTime >= 1.0){
-        delegate->OnInput();
+        if(delegate) delegate->OnInput();
+
         Update();
         updates++;
         deltaTime--;
@@ -64,24 +68,18 @@ void CoreEngine::Run(){
       Stop();
     }
 	}
-
 }
 
 void CoreEngine::Update(){
-  delegate->OnUpdate();
+  if(delegate) delegate->OnUpdate();
   uiEngine->Update();
 }
 
 void CoreEngine::Render(){
-  delegate->OnRender();
+  if(delegate) delegate->OnRender();
   for(auto o : gameObjects)
     renderEngine->Render(o->renderComponents);
   uiEngine->Render();
-}
-
-void CoreEngine::Destroy(){
-  delegate->OnDestroy();
-  uiEngine->Close();
 }
 
 void CoreEngine::AddGameObject(GameObject* object){
