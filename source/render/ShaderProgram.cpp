@@ -1,35 +1,30 @@
-#include <iostream>
-#include <fstream>
-#include <stdio.h>
-
+#include "tools/Utils.hpp"
+#include "tools/Resources.hpp"
 #include "tools/Log.hpp"
 #include "render/ShaderProgram.hpp"
 
 ShaderProgram::ShaderProgram() {
-  program = glCreateProgram();
-  if(!program){
+  id = glCreateProgram();
+  if(!id){
     Log::E("Program creation failed.");
     exit(1);
   }
 }
 
 ShaderProgram::~ShaderProgram(){
-
+  for(int shader : shaders){
+    glDetachShader(id, shader);
+    glDeleteShader(shader);
+  }
+  glDeleteProgram(id);
 }
 
-std::string ShaderProgram::LoadSourceFromFile(std::string fileName){
-	std::ifstream file;
-	file.open("resources/shaders/" + fileName, std::ios::in);
-	if(!file)
-	{
-		Log::E("Error opening shader file " + fileName);
-	  return NULL;
-	}
-  std::string content(
-    (std::istreambuf_iterator<char>(file)),
-    (std::istreambuf_iterator<char>()));
-	file.close();
-  return content;
+int ShaderProgram::GetProgram(){
+  return id;
+}
+
+void ShaderProgram::Bind(){
+  glUseProgram(id);
 }
 
 void ShaderProgram::AddShader(std::string fileName, int type){
@@ -39,12 +34,9 @@ void ShaderProgram::AddShader(std::string fileName, int type){
     exit(1);
   }
 
-  std::string code = LoadSourceFromFile(fileName);
+  char* code = Utils::StringToCharArray(Resources::LoadShaderSource(fileName));
 
-  char *cstr = new char[code.length() + 1];
-  strcpy(cstr, code.c_str());
-
-  glShaderSource(shader, 1, &cstr, NULL);
+  glShaderSource(shader, 1, &code, NULL);
   glCompileShader(shader);
 
   GLint success;
@@ -56,8 +48,10 @@ void ShaderProgram::AddShader(std::string fileName, int type){
       glGetShaderInfoLog(shader, 1024, &log_length, message);
       Log::E(message);
   }
-  glAttachShader(program, shader);
-  delete [] cstr;
+  glAttachShader(id, shader);
+
+  delete [] code;
+  shaders.push_front(shader);
 }
 
 void ShaderProgram::AddVertexShader(std::string fileName){
@@ -78,27 +72,48 @@ void ShaderProgram::AddFragmentShader(std::string fileName){
 void ShaderProgram::Link(){
   GLint success;
 
-  glLinkProgram(program);
-  glGetProgramiv(program, GL_LINK_STATUS, &success);
+  glLinkProgram(id);
+  glGetProgramiv(id, GL_LINK_STATUS, &success);
   if (success != GL_TRUE)
   {
     GLsizei log_length = 0;
     GLchar message[1024];
-    glGetProgramInfoLog(program, 1024, &log_length, message);
+    glGetProgramInfoLog(id, 1024, &log_length, message);
     Log::E(message);
   }
 
-  glValidateProgram(program);
-  glGetProgramiv(program, GL_VALIDATE_STATUS, &success);
+  glValidateProgram(id);
+  glGetProgramiv(id, GL_VALIDATE_STATUS, &success);
   if (success != GL_TRUE)
   {
     GLsizei log_length = 0;
     GLchar message[1024];
-    glGetProgramInfoLog(program, 1024, &log_length, message);
+    glGetProgramInfoLog(id, 1024, &log_length, message);
     Log::E(message);
   }
 }
 
-void ShaderProgram::Bind(){
-  glUseProgram(program);
+void ShaderProgram::AddUniform(std::string name){
+  int location = glGetUniformLocation(id, name.c_str());
+  if(location == GL_INVALID_VALUE || location == GL_INVALID_OPERATION || location == GL_INVALID_OPERATION){
+    Log::E("Failed to create \"" + name + "\" uniform. Error: " + std::to_string(location));
+    return;
+  }
+  uniforms[name] = location;
+}
+
+void ShaderProgram::SetUniformi(std::string name, int value){
+	glUniform1i(uniforms[name], value);
+}
+
+void ShaderProgram::SetUniformf(std::string name, float value){
+	glUniform1f(uniforms[name], value);
+}
+
+void ShaderProgram::SetUniformVector3f(std::string name, glm::vec3 value){
+	glUniform3f(uniforms[name], value.x, value.y, value.z);
+}
+
+void ShaderProgram::SetUniformMatrix4f(std::string name, glm::mat4 value){
+	glUniformMatrix4fv(uniforms[name], 1, GL_FALSE, &(value[0][0]));
 }

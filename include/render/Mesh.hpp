@@ -1,17 +1,18 @@
 #ifndef MESH_HPP
 #define MESH_HPP
 
-#include <list>
+#include <vector>
 #include <GL/glew.h>
 #include "render/Vertex.hpp"
 
 class Mesh {
   private:
     GLuint vbo;
+    GLuint ibo;
     int size;
 
   public:
-    Mesh(Vertex* vertices, int size);
+    Mesh(std::vector<Vertex> vertices, std::vector<int> indices);
     void Draw();
 };
 

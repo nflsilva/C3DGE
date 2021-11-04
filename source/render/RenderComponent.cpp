@@ -4,6 +4,6 @@ RenderComponent::RenderComponent() : geometry(NULL) {
 
 }
 
-void RenderComponent::CreateGeometry(Vertex* vertices, int size){
-  geometry = new Mesh(vertices, size);
+void RenderComponent::CreateGeometry(std::vector<Vertex> vertices,std::vector<int> indices){
+  geometry = new Mesh(vertices, indices);
 }
