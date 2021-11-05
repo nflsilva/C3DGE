@@ -7,8 +7,9 @@
 
 class Mesh {
   private:
+    GLuint vao;
     GLuint vbo;
-    GLuint ibo;
+    GLuint ebo;
     int size;
 
   public:

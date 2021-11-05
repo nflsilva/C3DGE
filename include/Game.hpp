@@ -14,6 +14,7 @@ class Game : public CoreEngineDelegate {
     GameObject* teddy;
     GameObject* cow;
     GameObject* teapot;
+    GameObject* board;
 
   public:
     Game(CoreEngine* engine);

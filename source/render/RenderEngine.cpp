@@ -33,6 +33,7 @@ void RenderEngine::Init(){
   CreateShaders();
 
   glEnable(GL_DEPTH_TEST);
+  glEnable(GL_TEXTURE_2D);
   glViewport(0, 0, width, height);
 
   glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -50,7 +51,9 @@ void RenderEngine::CreateShaders() {
 
 void RenderEngine::Render(std::list<RenderComponent*> components){
   for(auto o : components){
-    shaders[1]->SetUniformMatrix4f("tranform", projectionMatrix * camera->GetTransformationMatrix() * o->transform);
+    shaders[1]->SetUniformMatrix4f("in_transform", projectionMatrix * camera->GetTransformationMatrix() * o->transform);
+    if(o->texture)
+      o->texture->Bind(0);
     o->geometry->Draw();
   }
 }

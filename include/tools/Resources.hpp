@@ -1,6 +1,7 @@
 #ifndef RESOURCES_HPP
 #define RESOURCES_HPP
 
+#include <map>
 #include <vector>
 #include <iostream>
 #include <fstream>
@@ -12,7 +13,16 @@
 #include "render/Vertex.hpp"
 #include "tools/Log.hpp"
 
+#include "stb_image/stb_image.h"
+
 class Resources {
+  private:
+    class TxCd{
+      public:
+        TxCd() : x(0), y(0){}
+        float x;
+        float y;
+    };
 
   public:
     class MeshData {
@@ -21,7 +31,13 @@ class Resources {
         std::vector<int> indices;
         MeshData(){};
     };
-
+    class ImageData {
+      public:
+        int width, height, bpp;
+        stbi_uc* buffer;
+        ImageData() : width(0), height(0), bpp(0), buffer(NULL){};
+        ~ImageData(){  if(buffer) stbi_image_free(buffer); };
+    };
 
     static std::string LoadShaderSource(std::string fileName){
       std::ifstream file;
@@ -51,6 +67,22 @@ class Resources {
       }
 
       std::string line;
+      std::map<int, TxCd> vts;
+      int vtId = 0;
+
+      auto processFBlock = [](std::string block) {
+        std::vector<unsigned int> r;
+        size_t slash1Index = block.find("/");
+        size_t slash2Index = block.find("/", slash1Index + 1);
+
+        r.push_back(std::stod(block.substr(0, slash1Index))); 
+        if(slash2Index < block.size()) {
+          r.push_back(std::stod(block.substr(slash1Index + 1, slash2Index))); 
+          r.push_back(std::stod(block.substr(slash2Index + 1, block.size()))); 
+        }
+        return r;
+      };
+
       while (std::getline(file, line)) 
       {
           std::istringstream in(line);
@@ -67,7 +99,7 @@ class Resources {
               double v0 = std::stod(lineTokens[1]);
               double v1 = std::stod(lineTokens[2]);
               double v2 = std::stod(lineTokens[3]); 
-              md.vertices.push_back(Vertex(v0, v1, v2));;
+              md.vertices.push_back(Vertex(v0, v1, v2, 0, 0));;
           
               /*
               if (lineTokens.size()==7)
@@ -80,37 +112,33 @@ class Resources {
           }
           else if (lineTokens[0]=="vt")
           {
-              //double vt0 = std::stod(lineTokens[1]);
-              //double vt1 = std::stod(lineTokens[2]);
-              ///tex_coords.push_back(double_line);
+              double vt0 = std::stod(lineTokens[1]);
+              double vt1 = std::stod(lineTokens[2]);
+              vts[vtId].x = vt0; 
+              vts[vtId].y = vt1; 
+              vtId++;
           }
           else if (lineTokens[0]=="f")
           {
-              size_t idx1 = lineTokens[1].find("/");
-              unsigned int faceVertex0 = std::stod(lineTokens[1].substr(0, idx1)); 
-              //size_t idx2 = lineTokens[1].find("/", idx1 + 1);
-              //unsigned int faceTexture0 = std::stod(lineTokens[1].substr(idx1 + 1, idx2));
+              for(int block = 1; block < (int)lineTokens.size(); block++){
 
-              size_t idx3 = lineTokens[2].find("/");
-              unsigned int faceVertex1 = std::stod(lineTokens[2].substr(0, idx3)); 
-              //size_t idx4 = lineTokens[2].find("/", idx3 + 1);
-              //unsigned int v_idx_ftc_2 = std::stod(lineTokens[2].substr(idx3 + 1, idx4));
+                auto blockValues = processFBlock(lineTokens[block]);
 
-              size_t idx5 = lineTokens[3].find("/");
-              unsigned int faceVertex2 = std::stod(lineTokens[3].substr(0, idx5)); 
-              //size_t idx6 = lineTokens[3].find("/", idx5 + 1);
-              //unsigned int v_idx_ftc_3 = std::stod(lineTokens[3].substr(idx5 + 1, idx6));
+                // Vertex index
+                unsigned int vertexIndex = blockValues[0];
+                md.indices.push_back(vertexIndex - 1);
 
-              md.indices.push_back(faceVertex0 - 1);
-              md.indices.push_back(faceVertex1 - 1);
-              md.indices.push_back(faceVertex2 - 1);
+                // Texture coordinate index
+                if(blockValues.size() > 1){
+                  TxCd txcd = vts[blockValues[1]];
+                  md.vertices[vertexIndex - 1].tx = txcd.x;
+                  md.vertices[vertexIndex - 1].ty = txcd.y;
+                }
+                // Normal index
+                if(blockValues.size() > 2){;
+                }
 
-              /*
-              unint_line_tc.push_back(v_idx_ftc_1);
-              unint_line_tc.push_back(v_idx_ftc_2);
-              unint_line_tc.push_back(v_idx_ftc_3);
-              faces_tc.push_back(unint_line_tc);
-              */
+              }
           }
       
       }
@@ -118,6 +146,13 @@ class Resources {
       file.close();
 
       return md;
+    }
+
+    static ImageData LoadImageData(std::string fileName){
+      ImageData data;
+      stbi_set_flip_vertically_on_load(1);
+      data.buffer = stbi_load(("./resource/texture/" + fileName).c_str(), &data.width, &data.height, &data.bpp, 4);
+      return data;
     }
 
 };

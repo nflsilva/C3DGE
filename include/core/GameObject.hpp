@@ -19,10 +19,14 @@ class GameObject {
           rc->CreateGeometry(vertices, indices);
           instance->renderComponents.push_front(rc);
           return *this;
-        };
+        }
+        Builder AddTexture(std::string fileName){
+          instance->renderComponents.front()->CreateTexture(fileName);
+          return *this;
+        }
         GameObject* Build(){
           return instance;
-        };
+        }
     };
 
     ~GameObject(){
