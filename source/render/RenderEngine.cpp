@@ -5,7 +5,7 @@ float angle = 0;
 
 RenderEngine::RenderEngine(int width, int height) : width(width), height(height){
 
-  fov = 45.0f;
+  fov = 70.0f;
   zNear = 0.1f;
   zFar = 100.f;
   float ar = (float)width / (float)height;
