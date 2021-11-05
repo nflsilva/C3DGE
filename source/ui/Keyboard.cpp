@@ -15,16 +15,26 @@ Keyboard* Keyboard::Create(GLFWwindow* window){
   return instance;
 }
 
-bool Keyboard::GetKey(int key){
+bool Keyboard::IsKey(int key){
   return currentKeys.find(key) != currentKeys.end();
 
 }
-bool Keyboard::GetKeyDown(int key){
+bool Keyboard::IsKeyDown(int key){
   return downKeys.find(key) != downKeys.end();;
 }
-bool Keyboard::GetKeyUp(int key){
+bool Keyboard::IsKeyUp(int key){
   return upKeys.find(key) != upKeys.end();
 }
+
+std::unordered_set<int> Keyboard::GetCurrentKeys(){
+  return currentKeys;
+};
+std::unordered_set<int> Keyboard::GetDownKeys(){
+  return downKeys;
+};
+std::unordered_set<int> Keyboard::GetUpKeys(){
+  return upKeys;
+};
 
 void Keyboard::KeyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {

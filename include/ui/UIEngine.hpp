@@ -4,6 +4,7 @@
 #include "ui/Window.hpp"
 #include "ui/Keyboard.hpp"
 #include "ui/Mouse.hpp"
+#include "ui/InputState.hpp"
 
 class UIEngine {
   private:
@@ -18,6 +19,7 @@ class UIEngine {
     bool IsRunning();
     void Update();
     void Render();
+    InputState GetInputState();
 };
 
 #endif

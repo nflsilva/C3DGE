@@ -6,9 +6,25 @@
 class GameObject {
   public:
     std::list<RenderComponent*> renderComponents;
+    GameObject(){};
 
   public:
-    GameObject(){};
+    class Builder {
+      private:
+        GameObject* instance;
+      public:
+        Builder(){ instance = new GameObject(); }
+        Builder AddGeometry(std::vector<Vertex> vertices, std::vector<int> indices){
+          RenderComponent* rc = new RenderComponent();
+          rc->CreateGeometry(vertices, indices);
+          instance->renderComponents.push_front(rc);
+          return *this;
+        };
+        GameObject* Build(){
+          return instance;
+        };
+    };
+
     ~GameObject(){
       for(auto c : renderComponents){ delete(c);}
     }

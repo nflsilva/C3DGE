@@ -7,6 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "render/RenderComponent.hpp"
 #include "render/ShaderProgram.hpp"
+#include "render/Camera.hpp"
 
 class RenderEngine {
   private:
@@ -17,8 +18,8 @@ class RenderEngine {
     int width;
     int height;
 
+    Camera* camera;
     glm::mat4 projectionMatrix;
-
     std::unordered_map<int, ShaderProgram*> shaders;
 
     void CreateShaders();
@@ -29,6 +30,12 @@ class RenderEngine {
     void Init();
     void Render(std::list<RenderComponent*> components);
     void ClearScreen();
+
+    void MoveCameraLeft();
+    void MoveCameraRight();
+    void MoveCameraFoward();
+    void MoveCameraBackwards();
+    void RotateCameraLeft();
 };
 
 #endif

@@ -9,17 +9,18 @@ class Game : public CoreEngineDelegate {
 
   private:
     CoreEngine* engine;
-    GameObject* triangle;
-    float f = 0;
-    RenderComponent* trComponent;
 
+    float f = 0;
+    GameObject* teddy;
+    GameObject* cow;
+    GameObject* teapot;
 
   public:
     Game(CoreEngine* engine);
     ~Game();
 
     void OnStart();
-    void OnInput();
+    void OnInput(InputState input);
     void OnUpdate();
     void OnRender();
     void OnDestroy();

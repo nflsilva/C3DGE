@@ -24,6 +24,7 @@ class Window {
     bool IsRunning();
     void Update();
     void Render();
+    GLFWwindow* GetWindow();
 
 };
 

@@ -9,8 +9,8 @@
 class CoreEngine {
 
   private:
-    static const int WIDTH = 640;
-    static const int HEIGHT = 480;
+    static const int WIDTH = 1280;
+    static const int HEIGHT = 720;
     static constexpr double FRAME_CAP = 5000.0;
 
     UIEngine* uiEngine;
@@ -31,6 +31,12 @@ class CoreEngine {
     void Stop();
     void AddGameObject(GameObject* object);
     void SetDelegate(CoreEngineDelegate* delegate);
+
+    void MoveCameraToLeft();
+    void MoveCameraToRight();
+    void MoveCameraForward();
+    void MoveCameraBackwards();
+    void RotateCameraLeft();
 
 };
 

@@ -54,3 +54,6 @@ void Window::CloseCallback(GLFWwindow* window)
   glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
 
+GLFWwindow* Window::GetWindow(){
+  return window;
+}

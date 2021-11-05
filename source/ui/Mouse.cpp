@@ -16,15 +16,15 @@ Mouse* Mouse::Create(GLFWwindow* window){
   return instance;
 }
 
-bool Mouse::GetButton(int key){
+bool Mouse::IsButton(int key){
   return downButtons.find(key) != downButtons.end();
 }
 
-bool Mouse::GetButtonDown(int key){
+bool Mouse::IsButtonDown(int key){
   return downButtons.find(key) != downButtons.end();;
 }
 
-bool Mouse::GetButtonUp(int key){
+bool Mouse::IsButtonUp(int key){
   return upButtons.find(key) != upButtons.end();
 }
 

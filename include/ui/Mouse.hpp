@@ -25,9 +25,9 @@ class Mouse {
     Mouse(Mouse &other) = delete;
     void operator=(const Mouse &) = delete;
 
-    bool GetButton(int button);
-    bool GetButtonDown(int button);
-    bool GetButtonUp(int button);
+    bool IsButton(int button);
+    bool IsButtonDown(int button);
+    bool IsButtonUp(int button);
     int GetX();
     int GetY();
 

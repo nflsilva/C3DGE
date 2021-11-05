@@ -49,8 +49,7 @@ void CoreEngine::Run(){
     lastTime = nowTime;
 
     while (deltaTime >= 1.0){
-        if(delegate) delegate->OnInput();
-
+        if(delegate) delegate->OnInput(uiEngine->GetInputState());
         Update();
         updates++;
         deltaTime--;
@@ -59,8 +58,8 @@ void CoreEngine::Run(){
     frames++;
 
     if (Time::GetTime() - timer > 1.0) {
+        //Log::D(std::to_string(frames));
         timer++;
-        Log::D(std::to_string(frames));
         updates = 0, frames = 0;
     }
 
@@ -76,6 +75,7 @@ void CoreEngine::Update(){
 }
 
 void CoreEngine::Render(){
+  renderEngine->ClearScreen();
   if(delegate) delegate->OnRender();
   for(auto o : gameObjects)
     renderEngine->Render(o->renderComponents);
@@ -87,4 +87,20 @@ void CoreEngine::AddGameObject(GameObject* object){
 }
 void CoreEngine::SetDelegate(CoreEngineDelegate* delegate){
   this->delegate = delegate;
+}
+
+void CoreEngine::MoveCameraToLeft(){
+  renderEngine->MoveCameraLeft();
+};
+void CoreEngine::MoveCameraToRight(){
+  renderEngine->MoveCameraRight();
+};
+void CoreEngine::MoveCameraForward(){
+  renderEngine->MoveCameraFoward();
+};
+void CoreEngine::MoveCameraBackwards(){
+  renderEngine->MoveCameraBackwards();
+};
+void CoreEngine::RotateCameraLeft(){
+  renderEngine->RotateCameraLeft();
 }

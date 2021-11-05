@@ -24,9 +24,13 @@ class Keyboard {
     Keyboard(Keyboard &other) = delete;
     void operator=(const Keyboard &) = delete;
 
-    bool GetKey(int key);
-    bool GetKeyDown(int key);
-    bool GetKeyUp(int key);
+    bool IsKey(int key);
+    bool IsKeyDown(int key);
+    bool IsKeyUp(int key);
+
+    std::unordered_set<int> GetCurrentKeys();
+    std::unordered_set<int> GetDownKeys();
+    std::unordered_set<int> GetUpKeys();
 
     void Update();
 

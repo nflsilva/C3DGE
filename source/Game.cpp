@@ -13,19 +13,46 @@ Game::~Game(){};
 
 void Game::OnStart(){
 
-  Resources::MeshData md = Resources::LoadMeshData("teddy.obj");
+  Resources::MeshData cowData = Resources::LoadMeshData("cow.obj");
+  Resources::MeshData teddyData = Resources::LoadMeshData("teddy.obj");
+  Resources::MeshData teapotData = Resources::LoadMeshData("teapot.obj");
 
-  trComponent = new RenderComponent();
-  trComponent->CreateGeometry(md.vertices, md.indices);
+  cow = GameObject::Builder()
+          .AddGeometry(cowData.vertices, cowData.indices)
+          .Build();
 
-  triangle = new GameObject();
-  triangle->renderComponents.push_front(trComponent);
+  teddy = GameObject::Builder()
+          .AddGeometry(teddyData.vertices, teddyData.indices)
+          .Build();
 
-  engine->AddGameObject(triangle);
+  teapot = GameObject::Builder()
+          .AddGeometry(teapotData.vertices, teapotData.indices)
+          .Build();
+
+
+  engine->AddGameObject(cow);
+  engine->AddGameObject(teddy);
+  engine->AddGameObject(teapot);
 
 }
 
-void Game::OnInput(){
+void Game::OnInput(InputState input){
+
+  if(InputState::ContainsKey(&input.isDownKeys, 65) || InputState::ContainsKey(&input.isCurrentKey, 65)){
+    engine->MoveCameraToLeft();
+  }
+  if(InputState::ContainsKey(&input.isDownKeys, 68) || InputState::ContainsKey(&input.isCurrentKey, 68)){
+    engine->MoveCameraToRight();
+  }
+  if(InputState::ContainsKey(&input.isDownKeys, 87) || InputState::ContainsKey(&input.isCurrentKey, 87)){
+    engine->MoveCameraForward();
+  }
+  if(InputState::ContainsKey(&input.isDownKeys, 83) || InputState::ContainsKey(&input.isCurrentKey, 83)){
+    engine->MoveCameraBackwards();
+  }
+  if(InputState::ContainsKey(&input.isDownKeys, 54) || InputState::ContainsKey(&input.isCurrentKey, 54)){
+    engine->RotateCameraLeft();
+  }
 
 }
 
@@ -35,14 +62,23 @@ void Game::OnUpdate(){
 
 void Game::OnRender(){
   f += 0.025;
-
-  glm::mat4 t = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -25.0f));
-  glm::mat4 r = glm::rotate(t, (float)(f * M_PI * 10.0 / 180), glm::vec3(0.0f, 1.0f, 0.0f));
   //glm::mat4 s = glm::scale(r, glm::vec3(sin(f)));
 
-  triangle->renderComponents.front()->transform = r;
+  glm::mat4 tt = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -15.0f));
+  glm::mat4 tr = glm::rotate(tt, (float)(f * M_PI * 10.0 / 180), glm::vec3(1.0f, 1.0f, 1.0f));
+  teddy->renderComponents.front()->transform = tr;
+
+  glm::mat4 ct = glm::translate(glm::mat4(1.0f), glm::vec3(-2.5f, -1.0f, -5.0f));
+  glm::mat4 cr = glm::rotate(ct, (float)(2 * f * M_PI * 10.0 / 180), glm::vec3(1.0f, 1.0f, 0.0f));
+  cow->renderComponents.front()->transform = cr;
+
+  glm::mat4 pt = glm::translate(glm::mat4(1.0f), glm::vec3(2.5f, 1.0f, -5.0f));
+  glm::mat4 pr = glm::rotate(pt, (float)(4 * f * M_PI * 10.0 / 180), glm::vec3(0.0f, 1.0f, 1.0f));
+  teapot->renderComponents.front()->transform = pr;
 }
 
 void Game::OnDestroy(){
-  delete(triangle);
+  delete(teddy);
+  delete(cow);
+  delete(teapot);
 }
