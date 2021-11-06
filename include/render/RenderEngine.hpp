@@ -21,6 +21,7 @@ class RenderEngine {
     Camera* camera;
     glm::mat4 projectionMatrix;
     std::unordered_map<int, ShaderProgram*> shaders;
+    glm::vec3 cameraSpeed;
 
     void CreateShaders();
 
@@ -29,13 +30,17 @@ class RenderEngine {
     ~RenderEngine();
     void Init();
     void Render(std::list<RenderComponent*> components);
+    void Update();
     void ClearScreen();
 
     void MoveCameraLeft();
     void MoveCameraRight();
     void MoveCameraFoward();
     void MoveCameraBackwards();
-    void RotateCameraLeft();
+    void MoveCameraUp();
+    void MoveCameraDown();
+    void RotateSceneVerticalAxis(float angle);
+    void RotateSceneHorizontalAxis(float angle);
 };
 
 #endif

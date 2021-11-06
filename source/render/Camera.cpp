@@ -5,6 +5,8 @@ Camera::Camera(glm::vec3 position, glm::vec3 forward, glm::vec3 up) : position(p
   up = glm::normalize(up);
   forward = glm::normalize(forward);
 
+  lockAt = glm::normalize(position + forward);
+
   UpdateTransformationMatrix();
 }
 
@@ -14,26 +16,39 @@ void Camera::UpdateTransformationMatrix(){
   transformation = glm::lookAt(position, position + forward, up);
 }
 
+glm::vec3 Camera::GetPosition(){
+  return position;
+}
+
 void Camera::SetPosition(glm::vec3 position){
   this->position = position;
+}
+
+void Camera::TransformPosition(glm::mat4 transform){
+  glm::vec4 new_position = transform * glm::vec4(position.x, position.y, position.z, 1.0);
+  position.x = new_position.x;
+  position.y = new_position.y;
+  position.z = new_position.z;
 }
 
 void Camera::Move(glm::vec3 direction, float delta){
   position += (direction * delta);
   UpdateTransformationMatrix();
-  Log::D("[" + std::to_string(position.x) + " " + std::to_string(position.y) + " " + std::to_string(position.z));
 }
 
-void Camera::Rotate(float angle, glm::vec3 axis){
+void Camera::RotateSelf(float angle, glm::vec3 axis){
   glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1), glm::radians(angle), axis);
-  //up = glm::vec3(rotationMatrix * glm::vec4(up, 1.0));
-  //up = glm::normalize(up);
-
   forward = glm::vec3(rotationMatrix * glm::vec4(forward, 1.0));
   forward = glm::normalize(forward);
-
   UpdateTransformationMatrix();
-  Log::D("[" + std::to_string(forward.x) + " " + std::to_string(forward.y) + " " + std::to_string(forward.z));
+}
+
+void Camera::RotateAround(float angle, glm::vec3 axis){
+  glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1), glm::radians(angle), axis);
+  up = glm::normalize(glm::vec3(rotationMatrix * glm::vec4(up, 1.0)));
+  forward = glm::normalize(glm::vec3(rotationMatrix * glm::vec4(forward, 1.0)));
+  TransformPosition(rotationMatrix);
+  UpdateTransformationMatrix();
 }
 
 glm::mat4 Camera::GetTransformationMatrix(){

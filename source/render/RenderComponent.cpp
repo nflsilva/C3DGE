@@ -9,8 +9,14 @@ RenderComponent::~RenderComponent(){
   if(texture) delete(texture);
 }
 
-void RenderComponent::CreateGeometry(std::vector<Vertex> vertices,std::vector<int> indices){
-  geometry = new Mesh(vertices, indices);
+void RenderComponent::CreateGeometry(
+  std::vector<float> positions,
+  std::vector<float> textureCoordinates, 
+  std::vector<float> colors,
+  std::vector<float> normals, 
+  std::vector<int> indices){
+
+  geometry = new Mesh(positions, textureCoordinates, colors, normals, indices);
 }
 
 void RenderComponent::CreateTexture(std::string fileName){

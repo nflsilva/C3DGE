@@ -36,41 +36,42 @@ void CoreEngine::Stop(){
 
 void CoreEngine::Run(){
 
-  const double frameTime = 1.0 / FRAME_CAP;
-
-  double lastTime = Time::GetTime(), timer = lastTime;
-  double deltaTime = 0, nowTime = 0;
-  int frames = 0, updates = 0;
+  double tickTime =  (double)1 / TICKS_PER_SECOND;
+  double nowTime = 0, lastTime = 0, deltaTime = 0, timeToTick = 0;
+  int frames = 0, updates = 0, seconds = 0;
 
 	while(isRunning){
 
     nowTime = Time::GetTime();
-    deltaTime += (nowTime - lastTime) / frameTime;
+    deltaTime = (nowTime - lastTime);
+    timeToTick -= deltaTime;
     lastTime = nowTime;
 
-    while (deltaTime >= 1.0){
-        if(delegate) delegate->OnInput(uiEngine->GetInputState());
+    Time::SetDelta(deltaTime);
+    //Log::D("N: " + std::to_string(nowTime) + " D: " + std::to_string(deltaTime) + " S: " + std::to_string(seconds) );
+
+    if(timeToTick <= 0){
         Update();
+        if(delegate) delegate->OnInput(uiEngine->GetInputState());
         updates++;
-        deltaTime--;
+        timeToTick = tickTime;
     }
     Render();
     frames++;
 
-    if (Time::GetTime() - timer > 1.0) {
-        //Log::D(std::to_string(frames));
-        timer++;
+    if (Time::GetTime() > seconds) {
+        Log::D(std::to_string(frames) + " " + std::to_string(Time::GetDelta()));
         updates = 0, frames = 0;
+        seconds++;
     }
 
-    if(!uiEngine->IsRunning()){
-      Stop();
-    }
+    if(!uiEngine->IsRunning()) Stop();
 	}
 }
 
 void CoreEngine::Update(){
   if(delegate) delegate->OnUpdate();
+  renderEngine->Update();
   uiEngine->Update();
 }
 
@@ -101,6 +102,16 @@ void CoreEngine::MoveCameraForward(){
 void CoreEngine::MoveCameraBackwards(){
   renderEngine->MoveCameraBackwards();
 };
-void CoreEngine::RotateCameraLeft(){
-  renderEngine->RotateCameraLeft();
+void CoreEngine::MoveCameraUp(){
+  renderEngine->MoveCameraUp();
+};
+void CoreEngine::MoveCameraDown(){
+  renderEngine->MoveCameraDown();
+};
+void CoreEngine::RotateSceneVerticalAxis(float angle){
+  renderEngine->RotateSceneVerticalAxis(angle); 
 }
+void CoreEngine::RotateSceneHorizontalAxis(float angle){
+  renderEngine->RotateSceneHorizontalAxis(angle); 
+}
+

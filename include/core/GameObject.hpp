@@ -1,6 +1,7 @@
 #ifndef GAME_OBJECT_HPP
 #define GAME_OBJECT_HPP
 
+#include "tools/Resources.hpp"
 #include "render/RenderComponent.hpp"
 
 class GameObject {
@@ -14,9 +15,9 @@ class GameObject {
         GameObject* instance;
       public:
         Builder(){ instance = new GameObject(); }
-        Builder AddGeometry(std::vector<Vertex> vertices, std::vector<int> indices){
+        Builder AddGeometry(Resources::MeshData md){
           RenderComponent* rc = new RenderComponent();
-          rc->CreateGeometry(vertices, indices);
+          rc->CreateGeometry(md.vertices, md.textureCoordinates, md.colors, md.normals, md.indices);
           instance->renderComponents.push_front(rc);
           return *this;
         }

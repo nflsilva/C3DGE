@@ -10,24 +10,19 @@
 #include <string>
 #include <string.h>
 
-#include "render/Vertex.hpp"
+#include "render/Vec4DTO.hpp"
 #include "tools/Log.hpp"
 
 #include "stb_image/stb_image.h"
 
 class Resources {
-  private:
-    class TxCd{
-      public:
-        TxCd() : x(0), y(0){}
-        float x;
-        float y;
-    };
-
   public:
     class MeshData {
       public:
-        std::vector<Vertex> vertices;
+        std::vector<float> vertices;
+        std::vector<float> textureCoordinates;
+        std::vector<float> colors;
+        std::vector<float> normals;
         std::vector<int> indices;
         MeshData(){};
     };
@@ -67,8 +62,8 @@ class Resources {
       }
 
       std::string line;
-      std::map<int, TxCd> vts;
-      int vtId = 0;
+      std::vector<Vec4DTO> textureCoordinates;
+      std::vector<Vec4DTO> normals;
 
       auto processFBlock = [](std::string block) {
         std::vector<unsigned int> r;
@@ -96,11 +91,10 @@ class Resources {
           
           if (lineTokens[0]=="v")
           {
-              double v0 = std::stod(lineTokens[1]);
-              double v1 = std::stod(lineTokens[2]);
-              double v2 = std::stod(lineTokens[3]); 
-              md.vertices.push_back(Vertex(v0, v1, v2, 0, 0));;
-          
+              md.vertices.push_back(std::stod(lineTokens[1]));
+              md.vertices.push_back(std::stod(lineTokens[2]));
+              md.vertices.push_back(std::stod(lineTokens[3])); 
+
               /*
               if (lineTokens.size()==7)
               {
@@ -113,10 +107,14 @@ class Resources {
           else if (lineTokens[0]=="vt")
           {
               double vt0 = std::stod(lineTokens[1]);
-              double vt1 = std::stod(lineTokens[2]);
-              vts[vtId].x = vt0; 
-              vts[vtId].y = vt1; 
-              vtId++;
+              double vt1 = std::stod(lineTokens[2]); 
+              textureCoordinates.push_back(Vec4DTO(vt0, vt1));
+          }
+          else if (lineTokens[0]=="vn"){
+              double vnx = std::stod(lineTokens[1]);
+              double vny = std::stod(lineTokens[2]);
+              double vnz = std::stod(lineTokens[3]);
+              normals.push_back(Vec4DTO(vnx, vny, vnz));
           }
           else if (lineTokens[0]=="f")
           {
@@ -126,16 +124,24 @@ class Resources {
 
                 // Vertex index
                 unsigned int vertexIndex = blockValues[0];
-                md.indices.push_back(vertexIndex - 1);
+                md.indices.push_back(vertexIndex - 1); 
+                md.colors.push_back(0.5);
+                md.colors.push_back(0.7);
+                md.colors.push_back(0.5);
+                md.colors.push_back(1.0);
 
                 // Texture coordinate index
                 if(blockValues.size() > 1){
-                  TxCd txcd = vts[blockValues[1]];
-                  md.vertices[vertexIndex - 1].tx = txcd.x;
-                  md.vertices[vertexIndex - 1].ty = txcd.y;
+                  Vec4DTO vtc = textureCoordinates[blockValues[1] - 1];
+                  md.textureCoordinates.push_back(vtc.v0);
+                  md.textureCoordinates.push_back(vtc.v1);
                 }
                 // Normal index
-                if(blockValues.size() > 2){;
+                if(blockValues.size() > 2){
+                  Vec4DTO vn = normals[blockValues[2] - 1];
+                  md.normals.push_back(vn.v0);
+                  md.normals.push_back(vn.v1);
+                  md.normals.push_back(vn.v2);
                 }
 
               }

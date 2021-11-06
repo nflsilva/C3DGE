@@ -4,12 +4,12 @@
 UIEngine::UIEngine(int windowWidth, int windowHeight){
   window = new Window(windowWidth, windowHeight, "3DGE");
   keyboard = Keyboard::Create(window->GetWindow());
-  //mouse = window->GetMouse();
+  mouse = Mouse::Create(window->GetWindow());
 }
 UIEngine::~UIEngine(){
   delete(window);
   delete(keyboard);
-  //delete(mouse);
+  delete(mouse);
 }
 
 bool UIEngine::IsRunning(){
@@ -17,8 +17,7 @@ bool UIEngine::IsRunning(){
 }
 
 void UIEngine::Update(){
-  keyboard->Update();
-  //mouse->Update();
+  mouse->Update();
   window->Update();
 }
 
@@ -27,11 +26,15 @@ void UIEngine::Render(){
 }
 
 InputState UIEngine::GetInputState(){
-  InputState state;
-  
-  state.isCurrentKey = keyboard->GetCurrentKeys();
-  state.isDownKeys = keyboard->GetDownKeys();
-  state.isUpKeys = keyboard->GetUpKeys();
-
+  InputState state(
+    keyboard->GetPressedKeys(), 
+    mouse->GetX(),
+    mouse->GetY(),
+    mouse->GetDragX(),
+    mouse->GetDragY(),
+    mouse->GetScrollX(),
+    mouse->GetScrollY(),
+    mouse->GetDownButtons()
+  );
   return state;
 }

@@ -9,9 +9,7 @@ class Keyboard {
   private:
     static Keyboard* instance;
 
-    std::unordered_set<int> currentKeys; 
-    std::unordered_set<int> downKeys;
-    std::unordered_set<int> upKeys;
+    std::unordered_set<int> pressedKeys; 
 
     Keyboard(GLFWwindow* window);
     
@@ -24,15 +22,9 @@ class Keyboard {
     Keyboard(Keyboard &other) = delete;
     void operator=(const Keyboard &) = delete;
 
-    bool IsKey(int key);
-    bool IsKeyDown(int key);
-    bool IsKeyUp(int key);
+    bool IsKeyPressed(int key);
 
-    std::unordered_set<int> GetCurrentKeys();
-    std::unordered_set<int> GetDownKeys();
-    std::unordered_set<int> GetUpKeys();
-
-    void Update();
+    std::unordered_set<int> GetPressedKeys();
 
 };
 

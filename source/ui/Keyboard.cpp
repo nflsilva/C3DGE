@@ -15,25 +15,12 @@ Keyboard* Keyboard::Create(GLFWwindow* window){
   return instance;
 }
 
-bool Keyboard::IsKey(int key){
-  return currentKeys.find(key) != currentKeys.end();
-
-}
-bool Keyboard::IsKeyDown(int key){
-  return downKeys.find(key) != downKeys.end();;
-}
-bool Keyboard::IsKeyUp(int key){
-  return upKeys.find(key) != upKeys.end();
+bool Keyboard::IsKeyPressed(int key){
+  return pressedKeys.find(key) != pressedKeys.end();
 }
 
-std::unordered_set<int> Keyboard::GetCurrentKeys(){
-  return currentKeys;
-};
-std::unordered_set<int> Keyboard::GetDownKeys(){
-  return downKeys;
-};
-std::unordered_set<int> Keyboard::GetUpKeys(){
-  return upKeys;
+std::unordered_set<int> Keyboard::GetPressedKeys(){
+  return pressedKeys;
 };
 
 void Keyboard::KeyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -41,21 +28,12 @@ void Keyboard::KeyboardCallback(GLFWwindow* window, int key, int scancode, int a
   switch (action)
   {
   case GLFW_PRESS:
-    Keyboard::instance->downKeys.insert(key);
-    break;
-  case GLFW_REPEAT:
-    Keyboard::instance->currentKeys.insert(key);
+    Keyboard::instance->pressedKeys.insert(key);
     break;
   case GLFW_RELEASE:
-    Keyboard::instance->upKeys.insert(key);
+    Keyboard::instance->pressedKeys.erase(key);
     break;
   default:
     break;
   }
-}
-
-void Keyboard::Update(){
-  downKeys.clear();
-  currentKeys.clear();
-  upKeys.clear();
 }

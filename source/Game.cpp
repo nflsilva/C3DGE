@@ -12,64 +12,43 @@ Game::Game(CoreEngine* engine) : engine(engine) {}
 Game::~Game(){};
 
 void Game::OnStart(){
-  Resources::MeshData boardData = Resources::LoadMeshData("cube.obj");
-  
-  Resources::MeshData cowData = Resources::LoadMeshData("cow.obj");
-  Resources::MeshData teddyData = Resources::LoadMeshData("teddy.obj");
-  Resources::MeshData teapotData = Resources::LoadMeshData("teapot.obj");
+  Resources::MeshData cubeData = Resources::LoadMeshData("dog.obj");
 
-  cow = GameObject::Builder()
-          .AddGeometry(cowData.vertices, cowData.indices)
-          .Build();
 
-  teddy = GameObject::Builder()
-          .AddGeometry(teddyData.vertices, teddyData.indices)
-          .Build();
 
-  teapot = GameObject::Builder()
-          .AddGeometry(teapotData.vertices, teapotData.indices)
-          .Build();
-
-  std::vector<Vertex> positions = {
-    Vertex( 0.5f,  0.5f, -1.0f, 2.0f, 2.0f),
-    Vertex( 0.5f, -0.5f, -1.0f, 2.0f, 0.0f),
-    Vertex(-0.5f, -0.5f, -1.0f, 0.0f, 0.0f),
-    Vertex(-0.5f,  0.5f, -1.0f, 0.0f, 2.0f),
-  };
-
-  std::vector<int> indices = {
-    0, 1, 3,
-    1, 2, 3
-  };
-
-  board = GameObject::Builder()
-          .AddGeometry(boardData.vertices, boardData.indices)
+  cube = GameObject::Builder()
+          .AddGeometry(cubeData)
           .AddTexture("grass.tga")
           .Build();
 
-  engine->AddGameObject(cow);
-  engine->AddGameObject(teddy);
-  engine->AddGameObject(teapot);
-  engine->AddGameObject(board);
-
+  engine->AddGameObject(cube);
 }
 
 void Game::OnInput(InputState input){
 
-  if(InputState::ContainsKey(&input.isDownKeys, 65) || InputState::ContainsKey(&input.isCurrentKey, 65)){
+  if(input.IsKeyPressed(65)){ // A
     engine->MoveCameraToLeft();
   }
-  if(InputState::ContainsKey(&input.isDownKeys, 68) || InputState::ContainsKey(&input.isCurrentKey, 68)){
+  if(input.IsKeyPressed(68)){ // D
     engine->MoveCameraToRight();
   }
-  if(InputState::ContainsKey(&input.isDownKeys, 87) || InputState::ContainsKey(&input.isCurrentKey, 87)){
+  if(input.IsKeyPressed(87)){ // W
+    engine->MoveCameraUp();
+  }
+  if(input.IsKeyPressed(83)){ // S
+    engine->MoveCameraDown();
+  }
+
+  if(input.IsMousePressed(0)){
+    engine->RotateSceneVerticalAxis(input.GetDragDeltaX());
+    engine->RotateSceneHorizontalAxis(input.GetDragDeltaY());
+    Log::D(std::to_string(input.GetDragDeltaX()) + " : " + std::to_string(input.GetDragDeltaY()));
+  }
+
+  if(input.DidYScrollUp()){
     engine->MoveCameraForward();
-  }
-  if(InputState::ContainsKey(&input.isDownKeys, 83) || InputState::ContainsKey(&input.isCurrentKey, 83)){
+  }else if(input.DidYScrollDown()){
     engine->MoveCameraBackwards();
-  }
-  if(InputState::ContainsKey(&input.isDownKeys, 54) || InputState::ContainsKey(&input.isCurrentKey, 54)){
-    engine->RotateCameraLeft();
   }
 
 }
@@ -82,26 +61,11 @@ void Game::OnRender(){
   f += 0.025;
   //glm::mat4 s = glm::scale(r, glm::vec3(sin(f)));
 
-  glm::mat4 tt = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -15.0f));
-  glm::mat4 tr = glm::rotate(tt, (float)(f * M_PI * 10.0 / 180), glm::vec3(1.0f, 1.0f, 1.0f));
-  teddy->renderComponents.front()->transform = tr;
-
-  glm::mat4 ct = glm::translate(glm::mat4(1.0f), glm::vec3(-2.5f, -1.0f, -5.0f));
-  glm::mat4 cr = glm::rotate(ct, (float)(2 * f * M_PI * 10.0 / 180), glm::vec3(1.0f, 1.0f, 0.0f));
-  cow->renderComponents.front()->transform = cr;
-
-  glm::mat4 pt = glm::translate(glm::mat4(1.0f), glm::vec3(2.5f, 1.0f, -5.0f));
-  glm::mat4 pr = glm::rotate(pt, (float)(4 * f * M_PI * 10.0 / 180), glm::vec3(0.0f, 1.0f, 1.0f));
-  teapot->renderComponents.front()->transform = pr;
-
-  glm::mat4 bt = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -1.0f));
-  glm::mat4 br = glm::rotate(bt, (float)(4 * f * M_PI * 10.0 / 180), glm::vec3(0.0f, 1.0f, 1.0f));
-  board->renderComponents.front()->transform = br;
+  //glm::mat4 bt = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, .0f, -5.0f));
+  //glm::mat4 br = glm::rotate(bt, (float)(1 * f * M_PI * 10.0 / 180), glm::vec3(1.0f, 1.0f, 0.0f));
+  cube->renderComponents.front()->transform = glm::mat4(1.0f);
 }
 
 void Game::OnDestroy(){
-  delete(teddy);
-  delete(cow);
-  delete(teapot);
-  delete(board);
+  delete(cube);
 }

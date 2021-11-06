@@ -14,7 +14,12 @@ class RenderComponent {
   public:
     RenderComponent();
     ~RenderComponent();
-    void CreateGeometry(std::vector<Vertex> vertices,std::vector<int> indices);
+    void CreateGeometry(
+      std::vector<float> positions,
+      std::vector<float> textureCoordinates, 
+      std::vector<float> colors,
+      std::vector<float> normals, 
+      std::vector<int> indices);
     void CreateTexture(std::string fileName);
 };
 

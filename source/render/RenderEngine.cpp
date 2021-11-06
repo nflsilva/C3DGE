@@ -1,5 +1,6 @@
 #include "render/RenderEngine.hpp"
 #include "tools/Log.hpp"
+#include "tools/Time.hpp"
 
 float angle = 0;
 
@@ -11,7 +12,8 @@ RenderEngine::RenderEngine(int width, int height) : width(width), height(height)
   float ar = (float)width / (float)height;
   projectionMatrix = glm::perspective(glm::radians(fov), ar, zNear, zFar);
 
-  camera = new Camera(glm::vec3(0, 0, 0), glm::vec3(0, 0, -1), glm::vec3(0, 1, 0));
+  camera = new Camera(glm::vec3(0, 0, 5), glm::vec3(0, 0, -1), glm::vec3(0, 1, 0));
+  cameraSpeed = glm::vec3(0);
 }
 
 RenderEngine::~RenderEngine(){
@@ -36,13 +38,13 @@ void RenderEngine::Init(){
   glEnable(GL_TEXTURE_2D);
   glViewport(0, 0, width, height);
 
-  glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+  glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 void RenderEngine::CreateShaders() {
 	ShaderProgram* sp = new ShaderProgram();
-  sp->AddVertexShader("GenericVertex.glsl");
-  sp->AddFragmentShader("GenericFragment.glsl");
+  sp->AddVertexShader("generic/Vertex.glsl");
+  sp->AddFragmentShader("generic/Fragment.glsl");
   shaders[sp->GetProgram()] = sp;
 
   sp->AddUniform("tranform");
@@ -58,28 +60,59 @@ void RenderEngine::Render(std::list<RenderComponent*> components){
   }
 }
 
+void RenderEngine::Update(){
+
+  if(cameraSpeed.x != 0){
+    camera->Move(camera->Left(), cameraSpeed.x * Time::GetDelta());
+    cameraSpeed.x = (int)cameraSpeed.x / 1.05f;
+  }
+
+  if(cameraSpeed.y != 0){
+    camera->Move(camera->Up(), cameraSpeed.y * Time::GetDelta());
+    cameraSpeed.y = (int)cameraSpeed.y / 1.05f;
+  }
+
+  if(cameraSpeed.z != 0){
+    camera->Move(camera->Forward(), cameraSpeed.z * Time::GetDelta());
+    cameraSpeed.z = (int)cameraSpeed.z / 1.05f;
+  }
+
+}
+
 void RenderEngine::ClearScreen() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+  glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 void RenderEngine::MoveCameraLeft(){
-  camera->Move(camera->Left(), 0.5f);
-  //camera->Rotate(0.5, glm::vec3(0.0f, 1.0f, 0.0f));
+  cameraSpeed.x += 5.0f;
 }
 
 void RenderEngine::MoveCameraRight(){
-  camera->Move(camera->Left(), -0.5f);
+  cameraSpeed.x -= 5.0f;
 };
 
 void RenderEngine::MoveCameraFoward(){
-  camera->Move(camera->Forward(), 0.5f);
+  cameraSpeed.z += 5.0f;
 }
 
 void RenderEngine::MoveCameraBackwards(){
-  camera->Move(camera->Forward(), -0.5f);
+  cameraSpeed.z -= 5.0f;
 };
 
-void RenderEngine::RotateCameraLeft(){
-  camera->Rotate(10.0f, glm::vec3(0, 1, 0));
+void RenderEngine::MoveCameraUp(){
+  cameraSpeed.y += 5.0f;
 }
+
+void RenderEngine::MoveCameraDown(){
+  cameraSpeed.y -= 5.0f;
+};
+
+void RenderEngine::RotateSceneVerticalAxis(float angle){
+  camera->RotateAround(angle * Time::GetDelta(), camera->Up());
+}
+
+void RenderEngine::RotateSceneHorizontalAxis(float angle){
+  camera->RotateAround(-angle * Time::GetDelta(), camera->Left());
+}
+

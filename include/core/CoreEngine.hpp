@@ -9,9 +9,9 @@
 class CoreEngine {
 
   private:
+    static const int TICKS_PER_SECOND = 60;
     static const int WIDTH = 1280;
     static const int HEIGHT = 720;
-    static constexpr double FRAME_CAP = 5000.0;
 
     UIEngine* uiEngine;
     RenderEngine* renderEngine;
@@ -36,7 +36,10 @@ class CoreEngine {
     void MoveCameraToRight();
     void MoveCameraForward();
     void MoveCameraBackwards();
-    void RotateCameraLeft();
+    void MoveCameraUp();
+    void MoveCameraDown();
+    void RotateSceneVerticalAxis(float angle);
+    void RotateSceneHorizontalAxis(float angle);
 
 };
 
