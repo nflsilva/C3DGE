@@ -11,10 +11,7 @@ class Game : public CoreEngineDelegate {
     CoreEngine* engine;
 
     float f = 0;
-    GameObject* teddy;
-    GameObject* cow;
-    GameObject* teapot;
-    GameObject* cube;
+    GameObject* terrain;
 
   public:
     Game(CoreEngine* engine);

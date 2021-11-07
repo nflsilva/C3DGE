@@ -1,6 +1,8 @@
 #ifndef RESOURCES_HPP
 #define RESOURCES_HPP
 
+#include <set>
+#include <list>
 #include <map>
 #include <vector>
 #include <iostream>
@@ -14,6 +16,7 @@
 #include "tools/Log.hpp"
 
 #include "stb_image/stb_image.h"
+#include "tiny_obj_loader/tiny_obj_loader.h"
 
 class Resources {
   public:
@@ -50,106 +53,78 @@ class Resources {
     }
 
     static MeshData LoadMeshData(std::string fileName){
-
+      
       MeshData md;
-      std::ifstream file;
-      file.open("./resource/mesh/" + fileName, std::ios::in);
-  
-      if (!file.is_open()) 
-      { 
-        Log::E("Cannot open file " + fileName);
-        return md;
-      }
 
-      std::string line;
-      std::vector<Vec4DTO> textureCoordinates;
-      std::vector<Vec4DTO> normals;
+      tinyobj::ObjReaderConfig reader_config;
+      reader_config.mtl_search_path = "./resource/material/";
+      tinyobj::ObjReader reader;
 
-      auto processFBlock = [](std::string block) {
-        std::vector<unsigned int> r;
-        size_t slash1Index = block.find("/");
-        size_t slash2Index = block.find("/", slash1Index + 1);
-
-        r.push_back(std::stod(block.substr(0, slash1Index))); 
-        if(slash2Index < block.size()) {
-          r.push_back(std::stod(block.substr(slash1Index + 1, slash2Index))); 
-          r.push_back(std::stod(block.substr(slash2Index + 1, block.size()))); 
+      if (!reader.ParseFromFile("./resource/mesh/" + fileName, reader_config)) {
+        if (!reader.Error().empty()) {
+            Log::E("TinyObjReader: " + reader.Error());
         }
-        return r;
-      };
-
-      while (std::getline(file, line)) 
-      {
-          std::istringstream in(line);
-          std::vector<std::string> lineTokens;
-          std::string line_s;
-          while (in >> line_s)
-            lineTokens.push_back(line_s);
-
-          if(lineTokens.size() == 0)
-            continue;
-          
-          if (lineTokens[0]=="v")
-          {
-              md.vertices.push_back(std::stod(lineTokens[1]));
-              md.vertices.push_back(std::stod(lineTokens[2]));
-              md.vertices.push_back(std::stod(lineTokens[3])); 
-
-              /*
-              if (lineTokens.size()==7)
-              {
-                  double c1 = std::stod(lineTokens[4]);
-                  double c2 = std::stod(lineTokens[5]);
-                  double c3 = std::stod(lineTokens[6]);
-                  vert_color.push_back(double_line_color);
-              }*/
-          }
-          else if (lineTokens[0]=="vt")
-          {
-              double vt0 = std::stod(lineTokens[1]);
-              double vt1 = std::stod(lineTokens[2]); 
-              textureCoordinates.push_back(Vec4DTO(vt0, vt1));
-          }
-          else if (lineTokens[0]=="vn"){
-              double vnx = std::stod(lineTokens[1]);
-              double vny = std::stod(lineTokens[2]);
-              double vnz = std::stod(lineTokens[3]);
-              normals.push_back(Vec4DTO(vnx, vny, vnz));
-          }
-          else if (lineTokens[0]=="f")
-          {
-              for(int block = 1; block < (int)lineTokens.size(); block++){
-
-                auto blockValues = processFBlock(lineTokens[block]);
-
-                // Vertex index
-                unsigned int vertexIndex = blockValues[0];
-                md.indices.push_back(vertexIndex - 1); 
-                md.colors.push_back(0.5);
-                md.colors.push_back(0.7);
-                md.colors.push_back(0.5);
-                md.colors.push_back(1.0);
-
-                // Texture coordinate index
-                if(blockValues.size() > 1){
-                  Vec4DTO vtc = textureCoordinates[blockValues[1] - 1];
-                  md.textureCoordinates.push_back(vtc.v0);
-                  md.textureCoordinates.push_back(vtc.v1);
-                }
-                // Normal index
-                if(blockValues.size() > 2){
-                  Vec4DTO vn = normals[blockValues[2] - 1];
-                  md.normals.push_back(vn.v0);
-                  md.normals.push_back(vn.v1);
-                  md.normals.push_back(vn.v2);
-                }
-
-              }
-          }
-      
       }
-      
-      file.close();
+
+      if (!reader.Warning().empty()) {
+        Log::I("TinyObjReader: " + reader.Warning());
+      }
+
+      tinyobj::attrib_t attrib = reader.GetAttrib();
+      std::vector<tinyobj::shape_t> shapes = reader.GetShapes();
+      std::vector<tinyobj::material_t> materials = reader.GetMaterials();
+
+      Log::D(
+        std::to_string(attrib.vertices.size()) + " vertices. " 
+      + std::to_string(attrib.colors.size()) + " colors. " 
+      + std::to_string(attrib.normals.size()) + " normals. "
+      );
+
+      md.vertices = attrib.vertices;
+
+      int sizeVertixColors = 4 * (attrib.vertices.size() / 3);
+      float* vertixColor = new float[sizeVertixColors];
+
+      int sizeVertixNormals = attrib.vertices.size();
+      float* vertixNormal = new float[sizeVertixNormals];
+
+      for (size_t s = 0; s < shapes.size(); s++) {
+
+        size_t index_offset = 0;
+        for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
+
+          size_t fv = size_t(shapes[s].mesh.num_face_vertices[f]);
+          for (size_t v = 0; v < fv; v++) {
+
+            tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
+
+            tinyobj::material_t material = materials[shapes[s].mesh.material_ids[f]];
+            vertixColor[4 * idx.vertex_index + 0] = material.diffuse[0];
+            vertixColor[4 * idx.vertex_index + 1] = material.diffuse[1];
+            vertixColor[4 * idx.vertex_index + 2] = material.diffuse[2];
+            vertixColor[4 * idx.vertex_index + 3] = 1.0;
+
+            if (idx.normal_index >= 0) {
+              vertixNormal[3 * idx.vertex_index + 0] = attrib.normals[3 * idx.normal_index + 0];
+              vertixNormal[3 * idx.vertex_index + 1] = attrib.normals[3 * idx.normal_index + 1];
+              vertixNormal[3 * idx.vertex_index + 2] = attrib.normals[3 * idx.normal_index + 2];
+            }
+            
+            /*
+            if (idx.texcoord_index >= 0) {
+              tinyobj::real_t tx = attrib.texcoords[2*size_t(idx.texcoord_index)+0];
+              tinyobj::real_t ty = attrib.texcoords[2*size_t(idx.texcoord_index)+1];
+            }*/
+            
+            md.indices.push_back(idx.vertex_index);
+          }
+          index_offset += fv;
+
+        }
+      }
+
+      md.colors = std::vector<float>(vertixColor, vertixColor + sizeVertixColors * sizeof(float));
+      md.normals = std::vector<float>(vertixNormal, vertixNormal + sizeVertixNormals * sizeof(float));
 
       return md;
     }

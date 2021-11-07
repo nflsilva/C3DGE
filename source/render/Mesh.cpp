@@ -11,35 +11,20 @@ Mesh::Mesh(
   glGenVertexArrays(1, &vao);
   glBindVertexArray(vao);
 
-  vbos = new GLuint[4];
-  glGenBuffers(4, vbos);
-  glGenBuffers(1, &ebo);
+  if(positions.size() > 0)
+    vbos.push_back(LoadIntoVBO(0, 3, positions));
 
-  // positions
-  glBindBuffer(GL_ARRAY_BUFFER, vbos[0]);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(float) * positions.size(), positions.data(), GL_STATIC_DRAW);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
-  glEnableVertexAttribArray(0);
+  if(colors.size() > 0)
+    vbos.push_back(LoadIntoVBO(1, 4, colors));
 
-  // texture
-  glBindBuffer(GL_ARRAY_BUFFER, vbos[1]);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(float) * textureCoordinates.size(), textureCoordinates.data(), GL_STATIC_DRAW);
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
-  glEnableVertexAttribArray(1);
+  if(normals.size() > 0)
+    vbos.push_back(LoadIntoVBO(2, 3, normals));
 
-  // colors
-  glBindBuffer(GL_ARRAY_BUFFER, vbos[2]);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(float) * colors.size(), colors.data(), GL_STATIC_DRAW);
-  glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
-  glEnableVertexAttribArray(2);
-
-  // normals
-  glBindBuffer(GL_ARRAY_BUFFER, vbos[3]);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(float) * normals.size(), normals.data(), GL_STATIC_DRAW);
-  glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
-  glEnableVertexAttribArray(3);
+  if(textureCoordinates.size() > 0)
+    vbos.push_back(LoadIntoVBO(3, 2, textureCoordinates));
 
   // indices
+  glGenBuffers(1, &ebo);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(int), indices.data(), GL_STATIC_DRAW);
 
@@ -49,8 +34,17 @@ Mesh::Mesh(
 Mesh::~Mesh(){
   GLuint arrays[] = { vao };
   glDeleteVertexArrays(1, arrays);
-  glDeleteBuffers(4, vbos);
-  delete(vbos);
+  glDeleteBuffers(vbos.size(), vbos.data());
+}
+
+GLuint Mesh::LoadIntoVBO(int location, int length, std::vector<float> data){
+  GLuint vbo;
+  glGenBuffers(1, &vbo);
+  glBindBuffer(GL_ARRAY_BUFFER, vbo);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(float) * (int)data.size(), data.data(), GL_STATIC_DRAW);
+  glEnableVertexAttribArray(location);
+  glVertexAttribPointer(location, length, GL_FLOAT, GL_FALSE, length * sizeof(float), 0);
+  return vbo;
 }
 
 void Mesh::Draw(){

@@ -9,5 +9,5 @@ out vec4 out_color;
 
 void main()
 {
-    out_color = texture(texture0, texCoord);
+    gl_FragColor = color;
 };

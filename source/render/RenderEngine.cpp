@@ -8,7 +8,7 @@ RenderEngine::RenderEngine(int width, int height) : width(width), height(height)
 
   fov = 70.0f;
   zNear = 0.1f;
-  zFar = 100.f;
+  zFar = 500.f;
   float ar = (float)width / (float)height;
   projectionMatrix = glm::perspective(glm::radians(fov), ar, zNear, zFar);
 
@@ -109,7 +109,7 @@ void RenderEngine::MoveCameraDown(){
 };
 
 void RenderEngine::RotateSceneVerticalAxis(float angle){
-  camera->RotateAround(angle * Time::GetDelta(), camera->Up());
+  camera->RotateAround(angle / 2 * Time::GetDelta(), camera->Up());
 }
 
 void RenderEngine::RotateSceneHorizontalAxis(float angle){

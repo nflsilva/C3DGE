@@ -12,16 +12,14 @@ Game::Game(CoreEngine* engine) : engine(engine) {}
 Game::~Game(){};
 
 void Game::OnStart(){
-  Resources::MeshData cubeData = Resources::LoadMeshData("dog.obj");
 
+  Resources::MeshData terrainData = Resources::LoadMeshData("tree.obj");
 
-
-  cube = GameObject::Builder()
-          .AddGeometry(cubeData)
-          .AddTexture("grass.tga")
+  terrain = GameObject::Builder()
+          .AddGeometry(terrainData)
           .Build();
 
-  engine->AddGameObject(cube);
+  engine->AddGameObject(terrain);
 }
 
 void Game::OnInput(InputState input){
@@ -42,7 +40,7 @@ void Game::OnInput(InputState input){
   if(input.IsMousePressed(0)){
     engine->RotateSceneVerticalAxis(input.GetDragDeltaX());
     engine->RotateSceneHorizontalAxis(input.GetDragDeltaY());
-    Log::D(std::to_string(input.GetDragDeltaX()) + " : " + std::to_string(input.GetDragDeltaY()));
+    //Log::D(std::to_string(input.GetDragDeltaX()) + " : " + std::to_string(input.GetDragDeltaY()));
   }
 
   if(input.DidYScrollUp()){
@@ -63,9 +61,9 @@ void Game::OnRender(){
 
   //glm::mat4 bt = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, .0f, -5.0f));
   //glm::mat4 br = glm::rotate(bt, (float)(1 * f * M_PI * 10.0 / 180), glm::vec3(1.0f, 1.0f, 0.0f));
-  cube->renderComponents.front()->transform = glm::mat4(1.0f);
+  terrain->renderComponents.front()->transform = glm::mat4(1.0f);
 }
 
 void Game::OnDestroy(){
-  delete(cube);
+  delete(terrain);
 }

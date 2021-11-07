@@ -8,9 +8,11 @@
 class Mesh {
   private:
     GLuint vao;
-    GLuint* vbos;
+    std::vector<GLuint> vbos;
     GLuint ebo;
     int size;
+
+    GLuint LoadIntoVBO(int location, int size, std::vector<float> data);
 
   public:
     Mesh(std::vector<float> positions,

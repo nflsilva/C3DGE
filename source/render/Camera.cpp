@@ -4,15 +4,15 @@
 Camera::Camera(glm::vec3 position, glm::vec3 forward, glm::vec3 up) : position(position), forward(forward), up(up) {
   up = glm::normalize(up);
   forward = glm::normalize(forward);
-
   lockAt = glm::normalize(position + forward);
-
   UpdateTransformationMatrix();
 }
 
 Camera::~Camera(){}
 
 void Camera::UpdateTransformationMatrix(){
+
+  position.y = std::max(position.y, 0.0f);
   transformation = glm::lookAt(position, position + forward, up);
 }
 

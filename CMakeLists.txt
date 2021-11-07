@@ -16,6 +16,7 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 SET(3DGameEngine_CMAKE_DIR "${3DGameEngine_CMAKE_DIR}/cmake")
 
 add_subdirectory("dependencies/stb_image")
+add_subdirectory("dependencies/tiny_obj_loader")
 
 find_package(glfw3 3.3 REQUIRED)
 find_package(GLEW REQUIRED)
@@ -33,6 +34,7 @@ include_directories(
 target_link_libraries(3DGE 
   glfw 
   stb_image
+  tiny_obj_loader
   ${OPENGL_LIBRARIES}
   ${GLEW_LIBRARIES}
   ${GLM_LIBRARIES}
