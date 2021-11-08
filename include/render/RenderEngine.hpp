@@ -22,6 +22,7 @@ class RenderEngine {
     glm::mat4 projectionMatrix;
     std::unordered_map<int, ShaderProgram*> shaders;
     glm::vec3 cameraSpeed;
+    glm::vec4 lightDirection;
 
     void CreateShaders();
 

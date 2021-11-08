@@ -24,11 +24,11 @@ Mesh::Mesh(
     vbos.push_back(LoadIntoVBO(3, 2, textureCoordinates));
 
   // indices
-  glGenBuffers(1, &ebo);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(int), indices.data(), GL_STATIC_DRAW);
+  //glGenBuffers(1, &ebo);
+  //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+  //glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(int), indices.data(), GL_STATIC_DRAW);
 
-  this->size = indices.size();
+  this->size = positions.size();
 }
 
 Mesh::~Mesh(){
@@ -43,13 +43,14 @@ GLuint Mesh::LoadIntoVBO(int location, int length, std::vector<float> data){
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
   glBufferData(GL_ARRAY_BUFFER, sizeof(float) * (int)data.size(), data.data(), GL_STATIC_DRAW);
   glEnableVertexAttribArray(location);
-  glVertexAttribPointer(location, length, GL_FLOAT, GL_FALSE, length * sizeof(float), 0);
+  glVertexAttribPointer(location, length, GL_FLOAT, GL_FALSE, 0, 0);
   return vbo;
 }
 
 void Mesh::Draw(){
   glBindVertexArray(vao);
-  glDrawElements(GL_TRIANGLES, size, GL_UNSIGNED_INT, 0);
+  glDrawArrays(GL_TRIANGLES, 0, size);
+  //glDrawElements(GL_TRIANGLES, size, GL_UNSIGNED_INT, 0);
 }
 
 

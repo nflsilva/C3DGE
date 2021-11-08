@@ -1,27 +1,42 @@
-#version 330
+#version 330 core
 
-in vec2 texCoord;
-in vec4 color;
 in vec3 normal;
+in vec4 color;
+in vec2 texCoord;
+in vec3 lightDirection;
+in vec3 cameraPosition;
+
+uniform sampler2D texture0;
 
 out vec4 out_color;
 
+vec4 processDirLights(vec4 color){
+
+    vec4 lightAmbient = vec4(1.0, 1.0, 1.0, 1.0);
+    vec4 lightDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
+    vec4 lightSpecular = vec4(1.0, 1.0, 1.0, 1.0);
+
+	vec4 ambient = vec4(0.6941, 0.3451, 0.1059, 1.0) * 0.2 * lightAmbient;
+
+    vec4 diffuse = color * lightDiffuse;
+    float diffuseIntensity = max(dot(normal, lightDirection), 0.0);
+    if(diffuseIntensity >= 0.7)
+       diffuse *= vec4(0.7, 0.7, 0.7, 1.0); 
+    if(diffuseIntensity >= 0.5)
+        diffuse *= vec4(0.5, 0.5, 0.5, 1.0); 
+    if(diffuseIntensity >= 0.3)
+        diffuse *= vec4(0.3, 0.3, 0.3, 1.0); 
+
+	return ambient + diffuse;
+}
+
+
 void main()
 {
-  float fraction = 1.0;
-  float intensity;
-  vec4 capColor;
-  intensity = max(0.0, dot(vec3(0.0, 10.0, -5.0), normal));
-
-  if (intensity > pow(0.95, fraction)) {
-    capColor = vec4(vec3(0.9), 0.9);
-  } else if (intensity > pow(0.5, fraction)) {
-    capColor = vec4(vec3(0.6), 1.0);
-  } else if (intensity > pow(0.25, fraction)) {
-    capColor = vec4(vec3(0.4), 1.0);
-  } else {
-    capColor = vec4(vec3(0.2), 1.0);
-  }
-
-  gl_FragColor = capColor * color;
+    vec4 lightComponent = processDirLights(color);
+    vec4 textureComponent = texture(texture0, texCoord);
+    gl_FragColor = textureComponent * lightComponent;
 };
+
+
+

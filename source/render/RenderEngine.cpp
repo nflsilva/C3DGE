@@ -2,8 +2,6 @@
 #include "tools/Log.hpp"
 #include "tools/Time.hpp"
 
-float angle = 0;
-
 RenderEngine::RenderEngine(int width, int height) : width(width), height(height){
 
   fov = 70.0f;
@@ -12,8 +10,9 @@ RenderEngine::RenderEngine(int width, int height) : width(width), height(height)
   float ar = (float)width / (float)height;
   projectionMatrix = glm::perspective(glm::radians(fov), ar, zNear, zFar);
 
-  camera = new Camera(glm::vec3(0, 0, 5), glm::vec3(0, 0, -1), glm::vec3(0, 1, 0));
+  camera = new Camera(glm::vec3(0, 15, 15), glm::vec3(0, 0, -1), glm::vec3(0, 1, 0));
   cameraSpeed = glm::vec3(0);
+  lightDirection = glm::vec4(0.0, -1.0, 0.0, 1.0);
 }
 
 RenderEngine::~RenderEngine(){
@@ -43,17 +42,21 @@ void RenderEngine::Init(){
 
 void RenderEngine::CreateShaders() {
 	ShaderProgram* sp = new ShaderProgram();
-  sp->AddVertexShader("generic/Vertex.glsl");
-  sp->AddFragmentShader("generic/Fragment.glsl");
+  sp->AddVertexShader("toon/Vertex.glsl");
+  sp->AddFragmentShader("toon/Fragment.glsl");
   shaders[sp->GetProgram()] = sp;
 
-  sp->AddUniform("tranform");
+  sp->AddUniform("in_transform");
+  sp->AddUniform("in_lightDirection");
+  sp->AddUniform("in_cameraPosition");
   sp->Bind();
 }
 
 void RenderEngine::Render(std::list<RenderComponent*> components){
   for(auto o : components){
     shaders[1]->SetUniformMatrix4f("in_transform", projectionMatrix * camera->GetTransformationMatrix() * o->transform);
+    shaders[1]->SetUniformVector3f("in_lightDirection", glm::vec3(lightDirection.x, lightDirection.y, lightDirection.z));
+    shaders[1]->SetUniformVector3f("in_cameraPosition", glm::vec3(camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z));
     if(o->texture)
       o->texture->Bind(0);
     o->geometry->Draw();
@@ -77,6 +80,8 @@ void RenderEngine::Update(){
     cameraSpeed.z = (int)cameraSpeed.z / 1.05f;
   }
 
+  glm::mat4 rotation = glm::rotate(glm::mat4(1), 0.01f, glm::vec3(0.0, 0.0, 1.0));
+  lightDirection = rotation * lightDirection;
 }
 
 void RenderEngine::ClearScreen() {
@@ -93,11 +98,11 @@ void RenderEngine::MoveCameraRight(){
 };
 
 void RenderEngine::MoveCameraFoward(){
-  cameraSpeed.z += 5.0f;
+  cameraSpeed.z += 15.0f;
 }
 
 void RenderEngine::MoveCameraBackwards(){
-  cameraSpeed.z -= 5.0f;
+  cameraSpeed.z -= 15.0f;
 };
 
 void RenderEngine::MoveCameraUp(){
@@ -109,10 +114,10 @@ void RenderEngine::MoveCameraDown(){
 };
 
 void RenderEngine::RotateSceneVerticalAxis(float angle){
-  camera->RotateAround(angle / 2 * Time::GetDelta(), camera->Up());
+  camera->RotateAround(angle * 2 * Time::GetDelta(), camera->Up());
 }
 
 void RenderEngine::RotateSceneHorizontalAxis(float angle){
-  camera->RotateAround(-angle * Time::GetDelta(), camera->Left());
+  camera->RotateAround(-angle * 2 * Time::GetDelta(), camera->Left());
 }
 

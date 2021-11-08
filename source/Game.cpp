@@ -13,10 +13,11 @@ Game::~Game(){};
 
 void Game::OnStart(){
 
-  Resources::MeshData terrainData = Resources::LoadMeshData("tree.obj");
+  Resources::MeshData terrainData = Resources::LoadMeshData("amongus.obj");
 
   terrain = GameObject::Builder()
           .AddGeometry(terrainData)
+          .AddTexture("amongus.jpg")
           .Build();
 
   engine->AddGameObject(terrain);
@@ -38,9 +39,14 @@ void Game::OnInput(InputState input){
   }
 
   if(input.IsMousePressed(0)){
-    engine->RotateSceneVerticalAxis(input.GetDragDeltaX());
-    engine->RotateSceneHorizontalAxis(input.GetDragDeltaY());
-    //Log::D(std::to_string(input.GetDragDeltaX()) + " : " + std::to_string(input.GetDragDeltaY()));
+    int dx = input.GetDragDeltaX();
+    int dy = input.GetDragDeltaY();
+    if(dx*dx > dy*dy)
+      engine->RotateSceneVerticalAxis(dx);
+    else
+      engine->RotateSceneHorizontalAxis(dy);
+
+    //Log::D(std::to_string(dx) + " : " + std::to_string(dy));
   }
 
   if(input.DidYScrollUp()){

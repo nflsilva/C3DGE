@@ -80,14 +80,7 @@ class Resources {
       + std::to_string(attrib.normals.size()) + " normals. "
       );
 
-      md.vertices = attrib.vertices;
-
-      int sizeVertixColors = 4 * (attrib.vertices.size() / 3);
-      float* vertixColor = new float[sizeVertixColors];
-
-      int sizeVertixNormals = attrib.vertices.size();
-      float* vertixNormal = new float[sizeVertixNormals];
-
+      int i = 0;
       for (size_t s = 0; s < shapes.size(); s++) {
 
         size_t index_offset = 0;
@@ -98,33 +91,41 @@ class Resources {
 
             tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
 
-            tinyobj::material_t material = materials[shapes[s].mesh.material_ids[f]];
-            vertixColor[4 * idx.vertex_index + 0] = material.diffuse[0];
-            vertixColor[4 * idx.vertex_index + 1] = material.diffuse[1];
-            vertixColor[4 * idx.vertex_index + 2] = material.diffuse[2];
-            vertixColor[4 * idx.vertex_index + 3] = 1.0;
+            md.vertices.push_back(attrib.vertices[3 * idx.vertex_index + 0]);
+            md.vertices.push_back(attrib.vertices[3 * idx.vertex_index + 1]);
+            md.vertices.push_back(attrib.vertices[3 * idx.vertex_index + 2]);            
+
+            if(materials.size() > 0){
+              tinyobj::material_t material = materials[shapes[s].mesh.material_ids[f]];
+              md.colors.push_back(material.diffuse[0]);
+              md.colors.push_back(material.diffuse[1]);
+              md.colors.push_back(material.diffuse[2]);
+              md.colors.push_back(1.0);
+            }
 
             if (idx.normal_index >= 0) {
-              vertixNormal[3 * idx.vertex_index + 0] = attrib.normals[3 * idx.normal_index + 0];
-              vertixNormal[3 * idx.vertex_index + 1] = attrib.normals[3 * idx.normal_index + 1];
-              vertixNormal[3 * idx.vertex_index + 2] = attrib.normals[3 * idx.normal_index + 2];
+              md.normals.push_back(attrib.normals[3 * idx.normal_index + 0]);
+              md.normals.push_back(attrib.normals[3 * idx.normal_index + 1]);
+              md.normals.push_back(attrib.normals[3 * idx.normal_index + 2]);
             }
             
-            /*
             if (idx.texcoord_index >= 0) {
-              tinyobj::real_t tx = attrib.texcoords[2*size_t(idx.texcoord_index)+0];
-              tinyobj::real_t ty = attrib.texcoords[2*size_t(idx.texcoord_index)+1];
-            }*/
+              md.textureCoordinates.push_back(attrib.texcoords[2 * idx.texcoord_index + 0]);
+              md.textureCoordinates.push_back(attrib.texcoords[2 * idx.texcoord_index + 1]);
+            }
             
-            md.indices.push_back(idx.vertex_index);
+            md.indices.push_back(i++);
           }
           index_offset += fv;
 
         }
       }
 
-      md.colors = std::vector<float>(vertixColor, vertixColor + sizeVertixColors * sizeof(float));
-      md.normals = std::vector<float>(vertixNormal, vertixNormal + sizeVertixNormals * sizeof(float));
+      Log::D(
+        std::to_string(md.vertices.size() / 4) + " vertices. " 
+      + std::to_string(md.colors.size() / 4) + " colors. " 
+      + std::to_string(md.normals.size() / 3) + " normals. "
+      );
 
       return md;
     }
