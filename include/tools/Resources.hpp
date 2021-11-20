@@ -12,7 +12,6 @@
 #include <string>
 #include <string.h>
 
-#include "render/Vec4DTO.hpp"
 #include "tools/Log.hpp"
 
 #include "stb_image/stb_image.h"
@@ -36,7 +35,15 @@ class Resources {
         ImageData() : width(0), height(0), bpp(0), buffer(NULL){};
         ~ImageData(){  if(buffer) stbi_image_free(buffer); };
     };
-
+    class Vec4DTO {
+      public:
+        float v0, v1, v2, v3;
+        Vec4DTO(): v0(0), v1(0), v2(0), v3(0) {}
+        Vec4DTO(float v0, float v1) : v0(v0), v1(v1), v2(0), v3(0) {}
+        Vec4DTO(float v0, float v1, float v2) : v0(v0), v1(v1), v2(v2), v3(0) {}
+        Vec4DTO(float v0, float v1, float v2, float v3) : v0(v0), v1(v1), v2(v2), v3(v3) {}
+    };
+    
     static std::string LoadShaderSource(std::string fileName){
       std::ifstream file;
       file.open("./resource/shader/" + fileName, std::ios::in);

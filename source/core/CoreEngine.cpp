@@ -76,42 +76,20 @@ void CoreEngine::Update(){
 }
 
 void CoreEngine::Render(){
-  renderEngine->ClearScreen();
   if(delegate) delegate->OnRender();
-  for(auto o : gameObjects)
-    renderEngine->Render(o->renderComponents);
+  
   uiEngine->Render();
 }
 
+/*
 void CoreEngine::AddGameObject(GameObject* object){
   gameObjects.push_front(object);
-}
+}*/
 void CoreEngine::SetDelegate(CoreEngineDelegate* delegate){
   this->delegate = delegate;
 }
 
-void CoreEngine::MoveCameraToLeft(){
-  renderEngine->MoveCameraLeft();
-};
-void CoreEngine::MoveCameraToRight(){
-  renderEngine->MoveCameraRight();
-};
-void CoreEngine::MoveCameraForward(){
-  renderEngine->MoveCameraFoward();
-};
-void CoreEngine::MoveCameraBackwards(){
-  renderEngine->MoveCameraBackwards();
-};
-void CoreEngine::MoveCameraUp(){
-  renderEngine->MoveCameraUp();
-};
-void CoreEngine::MoveCameraDown(){
-  renderEngine->MoveCameraDown();
-};
-void CoreEngine::RotateSceneVerticalAxis(float angle){
-  renderEngine->RotateSceneVerticalAxis(angle); 
-}
-void CoreEngine::RotateSceneHorizontalAxis(float angle){
-  renderEngine->RotateSceneHorizontalAxis(angle); 
+void CoreEngine::SetCamera(BaseCamera* camera) {
+  renderEngine->SetCamera(camera);
 }
 

@@ -3,45 +3,31 @@
 
 #include <GL/glew.h>
 #include <unordered_map>
-#include <glm/ext/matrix_float4x4.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include "render/RenderComponent.hpp"
-#include "render/ShaderProgram.hpp"
-#include "render/Camera.hpp"
+
+#include "render/projection/PerspectiveProjection.hpp"
+#include "render/BaseShader.hpp"
+#include "render/BaseCamera.hpp"
+#include "ui/InputState.hpp"
 
 class RenderEngine {
   private:
-    
-    float zNear;
-    float zFar;
-    float fov;
-    int width;
-    int height;
+    int screenWidth, screenHeight;
+    PerspectiveProjection* projection;
+    BaseCamera* camera;
 
-    Camera* camera;
-    glm::mat4 projectionMatrix;
-    std::unordered_map<int, ShaderProgram*> shaders;
-    glm::vec3 cameraSpeed;
-    glm::vec4 lightDirection;
-
-    void CreateShaders();
-
-  public:
-    RenderEngine(int width, int height);
-    ~RenderEngine();
-    void Init();
-    void Render(std::list<RenderComponent*> components);
-    void Update();
     void ClearScreen();
 
-    void MoveCameraLeft();
-    void MoveCameraRight();
-    void MoveCameraFoward();
-    void MoveCameraBackwards();
-    void MoveCameraUp();
-    void MoveCameraDown();
-    void RotateSceneVerticalAxis(float angle);
-    void RotateSceneHorizontalAxis(float angle);
+  public:
+    RenderEngine(int screenWidth, int screenHeight);
+    ~RenderEngine();
+
+    void Init();
+    void Render();
+
+    void Update();
+    void Input(InputState input);
+    void SetCamera(BaseCamera* camera);
+
 };
 
 #endif

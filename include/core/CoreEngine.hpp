@@ -2,7 +2,6 @@
 #define CORE_ENGINE_HPP
 
 #include "render/RenderEngine.hpp"
-#include "core/GameObject.hpp"
 #include "core/CoreEngineDelegate.hpp"
 #include "ui/UIEngine.hpp"
 
@@ -16,7 +15,7 @@ class CoreEngine {
     UIEngine* uiEngine;
     RenderEngine* renderEngine;
     CoreEngineDelegate* delegate;
-    std::list<GameObject*> gameObjects;
+    //std::list<GameObject*> gameObjects;
 
     bool isRunning;
 
@@ -29,18 +28,9 @@ class CoreEngine {
     ~CoreEngine();
     void Start();
     void Stop();
-    void AddGameObject(GameObject* object);
+    //void AddGameObject(GameObject* object);
     void SetDelegate(CoreEngineDelegate* delegate);
-
-    void MoveCameraToLeft();
-    void MoveCameraToRight();
-    void MoveCameraForward();
-    void MoveCameraBackwards();
-    void MoveCameraUp();
-    void MoveCameraDown();
-    void RotateSceneVerticalAxis(float angle);
-    void RotateSceneHorizontalAxis(float angle);
-
+    void SetCamera(BaseCamera* camera);
 };
 
 #endif
