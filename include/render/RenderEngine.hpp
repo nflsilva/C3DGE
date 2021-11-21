@@ -5,8 +5,8 @@
 #include <unordered_map>
 
 #include "render/projection/PerspectiveProjection.hpp"
-#include "render/BaseShader.hpp"
 #include "render/BaseCamera.hpp"
+#include "render/BaseModel.hpp"
 #include "ui/InputState.hpp"
 
 class RenderEngine {
@@ -22,9 +22,9 @@ class RenderEngine {
     ~RenderEngine();
 
     void Init();
-    void Render();
+    void Render(std::list<BaseModel*> models);
 
-    void Update();
+    void Update(float elapsedTime);
     void Input(InputState input);
     void SetCamera(BaseCamera* camera);
 

@@ -12,25 +12,25 @@ Mesh::Mesh(
   glGenVertexArrays(1, &vao);
   glBindVertexArray(vao);
 
-  if(positions.size() > 0)
-    vbos.push_back(LoadIntoVBO(0, 3, positions));
+  LoadIntoIndexBuffer(indices);
 
+  LoadIntoAttributeList(0, 3, positions);
+  LoadIntoAttributeList(1, 2, textureCoordinates);
+
+  /*
   if(colors.size() > 0)
     vbos.push_back(LoadIntoVBO(1, 4, colors));
 
   if(normals.size() > 0)
     vbos.push_back(LoadIntoVBO(2, 3, normals));
-
-  if(textureCoordinates.size() > 0)
-    vbos.push_back(LoadIntoVBO(3, 2, textureCoordinates));
+  */
 
   // indices
-  //glGenBuffers(1, &ebo);
-  //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-  //glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(int), indices.data(), GL_STATIC_DRAW);
 
-  this->size = positions.size();
+  Unbind();
 }
+
+Mesh::Mesh(Resources::MeshData* data) : Mesh(data->vertices, data->textureCoordinates, data->colors, data->normals, data->indices) {}
 
 Mesh::~Mesh(){
   GLuint arrays[] = { vao };
@@ -38,28 +38,36 @@ Mesh::~Mesh(){
   glDeleteBuffers(vbos.size(), vbos.data());
 }
 
-GLuint Mesh::LoadIntoVBO(int location, int length, std::vector<float> data){
+void Mesh::LoadIntoAttributeList(int location, int length, std::vector<float> data){
   GLuint vbo;
   glGenBuffers(1, &vbo);
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(float) * (int)data.size(), data.data(), GL_STATIC_DRAW);
-  glEnableVertexAttribArray(location);
+  glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), data.data(), GL_STATIC_DRAW);
   glVertexAttribPointer(location, length, GL_FLOAT, GL_FALSE, 0, 0);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
-  return vbo;
+  vbos.push_back(vbo);
 }
 
-void Mesh::Draw(){
+void Mesh::LoadIntoIndexBuffer(std::vector<int> indices) {
+  GLuint vbo;
+  glGenBuffers(1, &vbo);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(int), indices.data(), GL_STATIC_DRAW);
+  this->size = indices.size();
+  vbos.push_back(vbo);
+}
+
+void Mesh::Unbind(){
+  glBindVertexArray(0);
+}
+
+void Mesh::Render(){
   glBindVertexArray(vao);
   glEnableVertexAttribArray(0);
   glEnableVertexAttribArray(1);
-  glEnableVertexAttribArray(2);
-  glEnableVertexAttribArray(3);
-  glDrawArrays(GL_TRIANGLES, 0, size);
+  glDrawElements(GL_TRIANGLES, size, GL_UNSIGNED_INT, 0);
   glDisableVertexAttribArray(0);
   glDisableVertexAttribArray(1);
-  glDisableVertexAttribArray(2);
-  glDisableVertexAttribArray(3);
   glBindVertexArray(0);
 }
 

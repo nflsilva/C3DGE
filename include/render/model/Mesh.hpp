@@ -4,13 +4,17 @@
 #include <vector>
 #include <GL/glew.h>
 
+#include "tools/Resources.hpp"
+
 class Mesh {
   private:
     GLuint vao;
     std::vector<GLuint> vbos;
     int size;
 
-    GLuint LoadIntoVBO(int location, int size, std::vector<float> data);
+    void LoadIntoAttributeList(int location, int size, std::vector<float> data);
+    void LoadIntoIndexBuffer(std::vector<int> data);
+    void Unbind();
 
   public:
     Mesh(std::vector<float> positions,
@@ -18,8 +22,9 @@ class Mesh {
           std::vector<float> colors,
           std::vector<float> normals, 
           std::vector<int> indices);
+    Mesh(Resources::MeshData* data);
     ~Mesh();
-    void Draw();
+    void Render();
 };
 
 #endif

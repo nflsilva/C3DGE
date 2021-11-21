@@ -1,13 +1,10 @@
 #include "render/RenderEngine.hpp"
+#include "render/BaseModel.hpp"
 #include "tools/Log.hpp"
 #include "tools/Time.hpp"
 
 RenderEngine::RenderEngine(int screenWidth, int screenHeight) : screenWidth(screenWidth), screenHeight(screenHeight) {
-  /*
-  camera = new Camera(glm::vec3(0, 1, 1), glm::vec3(0, -0.75, -1), glm::vec3(0, 1, 0));
-  cameraSpeed = glm::vec3(0);
-  lightDirection = glm::vec4(0.0, -1.0, 0.0, 1.0);
-  */
+  projection = new PerspectiveProjection((float)screenWidth, (float)screenHeight, 70.0F, 0.1F, 1000.0F);
 }
 
 RenderEngine::~RenderEngine(){
@@ -29,21 +26,26 @@ void RenderEngine::Init(){
 
 }
 
-void RenderEngine::Render(){
+void RenderEngine::Render(std::list<BaseModel*> models){
+  ClearScreen();
+  for(auto m : models){
+    Mesh* mesh = m->GetMesh();
+    Texture* texture = m->GetTexture();
+    Shader* shader = m->GetShader();
 
-  /*for(auto o : components){
-    shaders[0]->SetUniformMatrix4f("in_transform", projectionMatrix * camera->GetViewMatrix() * o->transform);
-    shaders[0]->SetUniformVector3f("in_lightDirection", glm::vec3(lightDirection.x, lightDirection.y, lightDirection.z));
-    shaders[0]->SetUniformVector3f("in_cameraPosition", glm::vec3(camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z));
-    if(o->texture)
-      o->texture->Bind(0);
-    o->geometry->Draw();
-  }*/
+    shader->Bind();
+    shader->SetMVPMatrix(projection->GetProjection() * camera->GetViewMatrix());
+    texture->Bind(0);
+    
+    mesh->Render();
 
+    texture->Unbind();
+    shader->Unbind();
+  }
 }
 
-void RenderEngine::Update(){
-  if(camera) camera->Update();
+void RenderEngine::Update(float elapsedTime){
+  if(camera) camera->Update(elapsedTime);
 
 }
 
@@ -57,39 +59,5 @@ void RenderEngine::SetCamera(BaseCamera* camera) {
 
 void RenderEngine::ClearScreen() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
-
-/*
-void RenderEngine::MoveCameraLeft(){
-  cameraSpeed.x += 5.0f;
-}
-
-void RenderEngine::MoveCameraRight(){
-  cameraSpeed.x -= 5.0f;
-};
-
-void RenderEngine::MoveCameraFoward(){
-  cameraSpeed.z += 5.0f;
-}
-
-void RenderEngine::MoveCameraBackwards(){
-  cameraSpeed.z -= 5.0f;
-};
-
-void RenderEngine::MoveCameraUp(){
-  cameraSpeed.y += 5.0f;
-}
-
-void RenderEngine::MoveCameraDown(){
-  cameraSpeed.y -= 5.0f;
-};
-
-void RenderEngine::RotateSceneVerticalAxis(float angle){
-  camera->RotateAround(angle * 2 * Time::GetDelta(), camera->Up());
-}
-
-void RenderEngine::RotateSceneHorizontalAxis(float angle){
-  camera->RotateAround(-angle * 2 * Time::GetDelta(), camera->Left());
-}
-*/

@@ -51,8 +51,10 @@ void CoreEngine::Run(){
     //Log::D("N: " + std::to_string(nowTime) + " D: " + std::to_string(deltaTime) + " S: " + std::to_string(seconds) );
 
     if(timeToTick <= 0){
-        Update();
-        if(delegate) delegate->OnInput(uiEngine->GetInputState());
+        Update(deltaTime);
+        InputState input = uiEngine->GetInputState();
+        if(delegate) delegate->OnInput(input);
+        renderEngine->Input(input);
         updates++;
         timeToTick = tickTime;
     }
@@ -69,22 +71,21 @@ void CoreEngine::Run(){
 	}
 }
 
-void CoreEngine::Update(){
-  if(delegate) delegate->OnUpdate();
-  renderEngine->Update();
-  uiEngine->Update();
+void CoreEngine::Update(float elapsedTime){
+  if(delegate) delegate->OnUpdate(elapsedTime);
+  renderEngine->Update(elapsedTime);
+  uiEngine->Update(elapsedTime);
 }
 
 void CoreEngine::Render(){
   if(delegate) delegate->OnRender();
-  
+  renderEngine->Render(gameObjects);
   uiEngine->Render();
 }
 
-/*
-void CoreEngine::AddGameObject(GameObject* object){
+void CoreEngine::AddGameObject(BaseModel* object){
   gameObjects.push_front(object);
-}*/
+}
 void CoreEngine::SetDelegate(CoreEngineDelegate* delegate){
   this->delegate = delegate;
 }

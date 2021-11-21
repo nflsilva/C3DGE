@@ -10,7 +10,7 @@
 #include "ui/InputState.hpp"
 
 class BaseCamera {
-  private:
+  protected:
     glm::vec3 position;
     glm::vec3 lockAt;
     glm::vec3 forward;
@@ -80,8 +80,8 @@ class BaseCamera {
       UpdateViewMatrix();
     }
 
-    void Update(){};
-    void Input(InputState input){};
+    virtual void Update(float elapsedTime){};
+    virtual void Input(InputState input){};
 
 };
 

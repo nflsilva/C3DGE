@@ -28,12 +28,12 @@ class Resources {
         std::vector<int> indices;
         MeshData(){};
     };
-    class ImageData {
+    class TextureData {
       public:
         int width, height, bpp;
         stbi_uc* buffer;
-        ImageData() : width(0), height(0), bpp(0), buffer(NULL){};
-        ~ImageData(){  if(buffer) stbi_image_free(buffer); };
+        TextureData() : width(0), height(0), bpp(0), buffer(NULL){};
+        ~TextureData(){  if(buffer) stbi_image_free(buffer); };
     };
     class Vec4DTO {
       public:
@@ -46,7 +46,7 @@ class Resources {
     
     static std::string LoadShaderSource(std::string fileName){
       std::ifstream file;
-      file.open("./resource/shader/" + fileName, std::ios::in);
+      file.open(fileName, std::ios::in);
       if(!file)
       {
         Log::E("Error opening shader file " + fileName);
@@ -59,15 +59,15 @@ class Resources {
       return content;
     }
 
-    static MeshData LoadMeshData(std::string fileName){
+    static MeshData LoadMeshData(std::string meshFileName, std::string materialFileName){
       
       MeshData md;
 
       tinyobj::ObjReaderConfig reader_config;
-      reader_config.mtl_search_path = "./resource/material/";
+      reader_config.mtl_search_path = materialFileName;
       tinyobj::ObjReader reader;
 
-      if (!reader.ParseFromFile("./resource/mesh/" + fileName, reader_config)) {
+      if (!reader.ParseFromFile(meshFileName, reader_config)) {
         if (!reader.Error().empty()) {
             Log::E("TinyObjReader: " + reader.Error());
         }
@@ -137,10 +137,72 @@ class Resources {
       return md;
     }
 
-    static ImageData LoadImageData(std::string fileName){
-      ImageData data;
-      stbi_set_flip_vertically_on_load(1);
-      data.buffer = stbi_load(("./resource/texture/" + fileName).c_str(), &data.width, &data.height, &data.bpp, 4);
+    static MeshData LoadMeshDataIndexed(std::string meshFileName){
+      
+      MeshData md;
+      tinyobj::ObjReaderConfig reader_config;
+      tinyobj::ObjReader reader;
+
+      if (!reader.ParseFromFile(meshFileName, reader_config)) {
+        if (!reader.Error().empty()) {
+            Log::E("TinyObjReader: " + reader.Error());
+        }
+      }
+
+      if (!reader.Warning().empty()) {
+        Log::I("TinyObjReader: " + reader.Warning());
+      }
+
+      tinyobj::attrib_t attrib = reader.GetAttrib();
+      std::vector<tinyobj::shape_t> shapes = reader.GetShapes();
+
+      int i = 0;
+      for (size_t s = 0; s < shapes.size(); s++) {
+
+        size_t index_offset = 0;
+        for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
+
+          size_t fv = size_t(shapes[s].mesh.num_face_vertices[f]);
+          for (size_t v = 0; v < fv; v++) {
+
+            tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
+
+            /*md.vertices.push_back(attrib.vertices[3 * idx.vertex_index + 0]);
+            md.vertices.push_back(attrib.vertices[3 * idx.vertex_index + 1]);
+            md.vertices.push_back(attrib.vertices[3 * idx.vertex_index + 2]);            
+
+            if (idx.normal_index >= 0) {
+              md.normals.push_back(attrib.normals[3 * idx.normal_index + 0]);
+              md.normals.push_back(attrib.normals[3 * idx.normal_index + 1]);
+              md.normals.push_back(attrib.normals[3 * idx.normal_index + 2]);
+            }*/
+            
+            if (idx.texcoord_index >= 0) {
+              md.textureCoordinates.push_back(attrib.texcoords[2 * idx.texcoord_index + 0]);
+              md.textureCoordinates.push_back(attrib.texcoords[2 * idx.texcoord_index + 1]);
+            } 
+            
+            md.indices.push_back(i++);
+          }
+          index_offset += fv;
+        }
+      }
+
+      md.vertices = attrib.vertices;
+
+      Log::D(
+        std::to_string(md.vertices.size() / 3) + " vertices. " 
+      + std::to_string(md.textureCoordinates.size() / 2) + " textCoords. " 
+      + std::to_string(md.normals.size() / 3) + " normals. "
+      );
+
+      return md;
+    }
+
+    static TextureData LoadTextureData(std::string fileName){
+      TextureData data;
+      stbi_set_flip_vertically_on_load(0);
+      data.buffer = stbi_load(fileName.c_str(), &data.width, &data.height, &data.bpp, 4);
       return data;
     }
 

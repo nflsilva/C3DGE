@@ -16,7 +16,7 @@ bool UIEngine::IsRunning(){
   return window->IsRunning();
 }
 
-void UIEngine::Update(){
+void UIEngine::Update(float elapsedTime){
   mouse->Update();
   window->Update();
 }

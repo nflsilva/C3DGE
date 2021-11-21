@@ -3,7 +3,7 @@
 
 Texture::Texture(std::string fileName){
 
-  Resources::ImageData data = Resources::LoadImageData(fileName);
+  Resources::TextureData data = Resources::LoadTextureData(fileName);
 
   width = data.width;
   height = data.height;
