@@ -7,7 +7,7 @@ model(model), position(position), rotation(rotation), scale(scale) {
 }
 
 GameObject::~GameObject(){
-  delete(model);
+  if(model) delete(model);
 }
 
 void GameObject::UpdateModelMatrix(){

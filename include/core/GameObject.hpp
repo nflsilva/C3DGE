@@ -19,7 +19,7 @@ class GameObject {
 
   public:
     GameObject(BaseModel* model, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
-    ~GameObject();
+    virtual ~GameObject();
     
     BaseModel* GetModel();
     glm::mat4 GetModelMatrix();

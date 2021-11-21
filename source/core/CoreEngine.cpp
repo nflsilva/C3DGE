@@ -13,6 +13,7 @@ CoreEngine::CoreEngine() : delegate(NULL), isRunning(false) {
 }
 CoreEngine::~CoreEngine(){
   if(delegate) delegate->OnDestroy();
+  for(auto o : gameObjects) delete(o);
   delete(renderEngine);
   delete(uiEngine);
 }

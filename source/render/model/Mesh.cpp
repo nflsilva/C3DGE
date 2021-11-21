@@ -13,19 +13,8 @@ Mesh::Mesh(
   glBindVertexArray(vao);
 
   LoadIntoIndexBuffer(indices);
-
   LoadIntoAttributeList(0, 3, positions);
   LoadIntoAttributeList(1, 2, textureCoordinates);
-
-  /*
-  if(colors.size() > 0)
-    vbos.push_back(LoadIntoVBO(1, 4, colors));
-
-  if(normals.size() > 0)
-    vbos.push_back(LoadIntoVBO(2, 3, normals));
-  */
-
-  // indices
 
   Unbind();
 }
@@ -33,6 +22,7 @@ Mesh::Mesh(
 Mesh::Mesh(Resources::MeshData* data) : Mesh(data->vertices, data->textureCoordinates, data->colors, data->normals, data->indices) {}
 
 Mesh::~Mesh(){
+  Unbind();
   GLuint arrays[] = { vao };
   glDeleteVertexArrays(1, arrays);
   glDeleteBuffers(vbos.size(), vbos.data());

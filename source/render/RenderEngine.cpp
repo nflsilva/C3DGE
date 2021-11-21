@@ -8,7 +8,8 @@ RenderEngine::RenderEngine(int screenWidth, int screenHeight) : screenWidth(scre
 }
 
 RenderEngine::~RenderEngine(){
-
+  if(projection) delete(projection);
+  if(camera) delete(camera);
 }
 
 void RenderEngine::Init(){

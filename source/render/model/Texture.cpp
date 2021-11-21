@@ -22,6 +22,7 @@ Texture::Texture(std::string fileName){
 }
 
 Texture::~Texture(){
+  Unbind();
   glDeleteTextures(1, &id);
 }
 
