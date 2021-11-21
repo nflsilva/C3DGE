@@ -4,9 +4,9 @@
 #include <GL/glew.h>
 #include <unordered_map>
 
+#include "core/GameObject.hpp"
 #include "render/projection/PerspectiveProjection.hpp"
 #include "render/BaseCamera.hpp"
-#include "render/BaseModel.hpp"
 #include "ui/InputState.hpp"
 
 class RenderEngine {
@@ -22,7 +22,7 @@ class RenderEngine {
     ~RenderEngine();
 
     void Init();
-    void Render(std::list<BaseModel*> models);
+    void Render(std::list<GameObject*> models);
 
     void Update(float elapsedTime);
     void Input(InputState input);

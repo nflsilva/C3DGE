@@ -1,9 +1,6 @@
-#include "render/BaseModel.hpp"
+#include "render/model/BaseModel.hpp"
 
-BaseModel::BaseModel(Mesh* mesh, Texture* texture, Shader* shader) : mesh(mesh), texture(texture), shader(shader) {
-
-}
-
+BaseModel::BaseModel(Mesh* mesh, Texture* texture, Shader* shader) : mesh(mesh), texture(texture), shader(shader) {}
 BaseModel::~BaseModel(){};
 
 Mesh* BaseModel::GetMesh(){

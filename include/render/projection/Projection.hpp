@@ -5,7 +5,7 @@
 
 class Projection {
   public:
-    virtual glm::mat4 GetProjection() = 0;
+    virtual glm::mat4 GetProjectionMatrix() = 0;
 };
 
 #endif

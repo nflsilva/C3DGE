@@ -35,12 +35,7 @@ class BaseCamera {
       lockAt = glm::normalize(position + forward);
       UpdateViewMatrix();
     }
-    ~BaseCamera(){
-      
-    }
-
-
-
+    ~BaseCamera(){}
     glm::vec3 GetPosition(){
       return position;
     }

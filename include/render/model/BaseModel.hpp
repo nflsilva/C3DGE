@@ -10,15 +10,12 @@ class BaseModel {
     Mesh* mesh;
     Texture* texture;
     Shader* shader;
-
   public:
     BaseModel(Mesh* mesh, Texture* texture, Shader* shader);
     ~BaseModel();
-
     Mesh* GetMesh();
     Texture* GetTexture();
     Shader* GetShader();
-
 };
 
 #endif

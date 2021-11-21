@@ -1,7 +1,7 @@
 #ifndef CORE_ENGINE_HPP
 #define CORE_ENGINE_HPP
 
-#include "render/BaseModel.hpp"
+#include "core/GameObject.hpp"
 #include "render/RenderEngine.hpp"
 #include "core/CoreEngineDelegate.hpp"
 #include "ui/UIEngine.hpp"
@@ -16,7 +16,7 @@ class CoreEngine {
     UIEngine* uiEngine;
     RenderEngine* renderEngine;
     CoreEngineDelegate* delegate;
-    std::list<BaseModel*> gameObjects;
+    std::list<GameObject*> gameObjects;
 
     bool isRunning;
 
@@ -29,7 +29,7 @@ class CoreEngine {
     ~CoreEngine();
     void Start();
     void Stop();
-    void AddGameObject(BaseModel* object);
+    void AddGameObject(GameObject* object);
     void SetDelegate(CoreEngineDelegate* delegate);
     void SetCamera(BaseCamera* camera);
 };

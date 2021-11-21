@@ -1,5 +1,5 @@
 #include "render/RenderEngine.hpp"
-#include "render/BaseModel.hpp"
+#include "core/GameObject.hpp"
 #include "tools/Log.hpp"
 #include "tools/Time.hpp"
 
@@ -26,15 +26,17 @@ void RenderEngine::Init(){
 
 }
 
-void RenderEngine::Render(std::list<BaseModel*> models){
+void RenderEngine::Render(std::list<GameObject*> objects){
   ClearScreen();
-  for(auto m : models){
+  glm::mat4 vpMatrix = projection->GetProjectionMatrix() * camera->GetViewMatrix();
+  for(auto o : objects){
+    BaseModel* m = o->GetModel();
     Mesh* mesh = m->GetMesh();
     Texture* texture = m->GetTexture();
     Shader* shader = m->GetShader();
 
     shader->Bind();
-    shader->SetMVPMatrix(projection->GetProjection() * camera->GetViewMatrix());
+    shader->SetMVPMatrix(vpMatrix * o->GetModelMatrix());
     texture->Bind(0);
     
     mesh->Render();

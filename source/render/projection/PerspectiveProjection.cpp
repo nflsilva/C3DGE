@@ -7,6 +7,6 @@ PerspectiveProjection::PerspectiveProjection(float width, float height, float fo
 
 PerspectiveProjection::~PerspectiveProjection(){};
 
-glm::mat4 PerspectiveProjection::GetProjection() {
+glm::mat4 PerspectiveProjection::GetProjectionMatrix() {
   return projectionMatrix;
 };

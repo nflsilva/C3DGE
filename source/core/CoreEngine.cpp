@@ -62,7 +62,7 @@ void CoreEngine::Run(){
     frames++;
 
     if (Time::GetTime() > seconds) {
-        Log::D(std::to_string(frames) + " " + std::to_string(Time::GetDelta()));
+        Log::D(std::to_string(frames) + " " + std::to_string(Time::GetDelta()) + " " + std::to_string(updates));
         updates = 0, frames = 0;
         seconds++;
     }
@@ -83,7 +83,7 @@ void CoreEngine::Render(){
   uiEngine->Render();
 }
 
-void CoreEngine::AddGameObject(BaseModel* object){
+void CoreEngine::AddGameObject(GameObject* object){
   gameObjects.push_front(object);
 }
 void CoreEngine::SetDelegate(CoreEngineDelegate* delegate){

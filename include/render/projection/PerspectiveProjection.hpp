@@ -18,7 +18,7 @@ class PerspectiveProjection : public Projection {
   public:
     PerspectiveProjection(float width, float height, float fov, float zNear, float zFar);
     ~PerspectiveProjection();
-    glm::mat4 GetProjection();
+    glm::mat4 GetProjectionMatrix();
 };
 
 #endif
