@@ -46,14 +46,8 @@ void RenderEngine::Render(std::list<GameObject*> objects){
   }
 }
 
-void RenderEngine::Update(float elapsedTime){
-  if(camera) camera->Update(elapsedTime);
-
-}
-
-void RenderEngine::Input(InputState input){
-  if(camera) camera->Input(input);
-
+void RenderEngine::Update(float elapsedTime, InputState input){
+  if(camera) camera->Update(elapsedTime, input);
 }
 void RenderEngine::SetCamera(BaseCamera* camera) {
   this->camera = camera;
@@ -61,5 +55,5 @@ void RenderEngine::SetCamera(BaseCamera* camera) {
 
 void RenderEngine::ClearScreen() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+  glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 }

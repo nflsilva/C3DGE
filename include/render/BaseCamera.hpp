@@ -75,9 +75,7 @@ class BaseCamera {
       UpdateViewMatrix();
     }
 
-    virtual void Update(float elapsedTime){};
-    virtual void Input(InputState input){};
-
+    virtual void Update(float elapsedTime, InputState input){};
 };
 
 #endif

@@ -51,10 +51,8 @@ void CoreEngine::Run(){
     //Log::D("N: " + std::to_string(nowTime) + " D: " + std::to_string(deltaTime) + " S: " + std::to_string(seconds) );
 
     if(timeToTick <= 0){
-        Update(deltaTime);
         InputState input = uiEngine->GetInputState();
-        if(delegate) delegate->OnInput(input);
-        renderEngine->Input(input);
+        Update(deltaTime, input);
         updates++;
         timeToTick = tickTime;
     }
@@ -71,10 +69,13 @@ void CoreEngine::Run(){
 	}
 }
 
-void CoreEngine::Update(float elapsedTime){
-  if(delegate) delegate->OnUpdate(elapsedTime);
-  renderEngine->Update(elapsedTime);
-  uiEngine->Update(elapsedTime);
+void CoreEngine::Update(float elapsedTime, InputState input){
+  if(delegate) delegate->OnUpdate(elapsedTime, input);
+  for(auto o : gameObjects){
+    o->Update(elapsedTime, input);
+  }
+  renderEngine->Update(elapsedTime, input);
+  uiEngine->Update(elapsedTime, input);
 }
 
 void CoreEngine::Render(){

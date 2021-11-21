@@ -17,7 +17,7 @@ class UIEngine {
     ~UIEngine();
 
     bool IsRunning();
-    void Update(float elapsedTime);
+    void Update(float elapsedTime, InputState input);
     void Render();
     InputState GetInputState();
 };

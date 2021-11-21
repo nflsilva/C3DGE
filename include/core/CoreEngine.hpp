@@ -21,7 +21,7 @@ class CoreEngine {
     bool isRunning;
 
     void Run();
-    void Update(float elapsedTime);
+    void Update(float elapsedTime, InputState input);
     void Render();
 
   public:

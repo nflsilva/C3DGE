@@ -3,14 +3,12 @@
 
 GameObject::GameObject(BaseModel* model, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale) : 
 model(model), position(position), rotation(rotation), scale(scale) {
-
   UpdateModelMatrix();
-
-
-
 }
 
-GameObject::~GameObject(){}
+GameObject::~GameObject(){
+  delete(model);
+}
 
 void GameObject::UpdateModelMatrix(){
   modelMatrix = glm::translate(glm::mat4(1.0F), position);
@@ -26,4 +24,21 @@ BaseModel* GameObject::GetModel(){
 
 glm::mat4 GameObject::GetModelMatrix(){
   return modelMatrix;
+}
+
+void GameObject::SetPosition(glm::vec3 newPosition){
+  position = newPosition;
+}
+void GameObject::Move(glm::vec3 delta){
+  position += delta;
+}
+void GameObject::Rotate(glm::vec3 delta){
+  rotation += delta;
+}
+void GameObject::Scale(glm::vec3 delta){
+  scale += delta;
+}
+
+void GameObject::Update(float elapsedTime, InputState input){
+  //Does nothing
 }

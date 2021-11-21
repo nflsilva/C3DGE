@@ -24,8 +24,7 @@ class RenderEngine {
     void Init();
     void Render(std::list<GameObject*> models);
 
-    void Update(float elapsedTime);
-    void Input(InputState input);
+    void Update(float elapsedTime, InputState input);
     void SetCamera(BaseCamera* camera);
 
 };
