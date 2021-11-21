@@ -167,15 +167,16 @@ class Resources {
 
             tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
 
-            /*md.vertices.push_back(attrib.vertices[3 * idx.vertex_index + 0]);
+            md.vertices.push_back(attrib.vertices[3 * idx.vertex_index + 0]);
             md.vertices.push_back(attrib.vertices[3 * idx.vertex_index + 1]);
             md.vertices.push_back(attrib.vertices[3 * idx.vertex_index + 2]);            
-
+/*
             if (idx.normal_index >= 0) {
               md.normals.push_back(attrib.normals[3 * idx.normal_index + 0]);
               md.normals.push_back(attrib.normals[3 * idx.normal_index + 1]);
               md.normals.push_back(attrib.normals[3 * idx.normal_index + 2]);
-            }*/
+            }
+*/
             
             if (idx.texcoord_index >= 0) {
               md.textureCoordinates.push_back(attrib.texcoords[2 * idx.texcoord_index + 0]);
@@ -187,8 +188,6 @@ class Resources {
           index_offset += fv;
         }
       }
-
-      md.vertices = attrib.vertices;
 
       Log::D(
         std::to_string(md.vertices.size() / 3) + " vertices. " 

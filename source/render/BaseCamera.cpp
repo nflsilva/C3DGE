@@ -7,7 +7,6 @@ void BaseCamera::TransformPosition(glm::mat4 transform){
   position.z = new_position.z;
 }
 void BaseCamera::BaseCamera::UpdateViewMatrix(){
-  position.y = std::max(position.y, 0.0f);
   viewMatrix = glm::lookAt(position, position + forward, up);
 }
 

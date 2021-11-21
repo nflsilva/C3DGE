@@ -25,7 +25,7 @@ class Shader {
 
   public:
     Shader(std::string vertexProgram, std::string fragmentProgram);
-    ~Shader();
+    virtual ~Shader();
     void Bind();
     void Unbind();
 
