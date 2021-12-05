@@ -1,7 +1,4 @@
 <div id="top"></div>
-
-[![MIT License][license-shield]][license-url]
-
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
@@ -142,9 +139,3 @@ As guide and study material I would like to acknowledge the following:
 
 * [ThinMatrix YouTube channel](https://www.youtube.com/channel/UCUkRj4qoT1bsWpE_C8lZYoQ)
 * [TheBennyBox YouTube channel](https://www.youtube.com/channel/UCnlpv-hhcsAtEHKR2y2fW4Q)
-
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
-
-[license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
